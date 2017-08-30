@@ -12,7 +12,7 @@ public class TicketVO{
 
 	//티켓은 외래키로 각 정보를 빌려서 받아온다.
 	//참조
-	private String mem_id;		//소유자 = 주인?
+	private String mem_id;		//소유자
 	private String bus_id;		//버스에서 가져온 정보 = 노선, 요금, 출발시간, 좌석, 종류	
 
 	public String getId() {

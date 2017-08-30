@@ -1,7 +1,5 @@
 package kr.or.ddit;
 
-import kr.or.ddit.service.Service;
-import kr.or.ddit.service.ServiceImpl;
 
 /**
  * @Class 
@@ -11,10 +9,10 @@ import kr.or.ddit.service.ServiceImpl;
  * @version 0.1
  * @see
  * <pre>
- *   수정일			수정자		수정내용		
+ *	수정일			수정자		수정내용		
  *	-------			-------		-------------------				
- *  2017.08.29		김수환		First commit		
- *  2017.08.30		현우석		프로젝트 구조
+ *	2017.08.29		김수환		First commit		
+ *	2017.08.30		현우석		프로젝트 구조
  * </pre>		
  * <pre>
  *  해야할것
