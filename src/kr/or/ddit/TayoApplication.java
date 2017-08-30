@@ -23,8 +23,7 @@ import kr.or.ddit.service.ServiceImpl;
  */
 public class TayoApplication {
 	public static void main(String[] args) {
-		Service service = new ServiceImpl();
-		
-		service.mainMenu();
+		ViewClass vc = new ViewClass();
+		vc.startMethod();
 	}
 }

@@ -2,30 +2,18 @@ package kr.or.ddit.vo;
 
 public class MemberVO {
 	//어느 VO클래스건 index의 id
-	private String id; //기본키
+	private String id; 			//기본키
 	
-	private boolean isAdmin;
+	private boolean isAdmin;	//분류 = 회원 /관리자
 	
-	private String mbUserId;
+	private String mbUserId;	//아이디
 	
-	private String mbUserPw;
+	private String mbUserPw;	//패스워드
 	
-	private String mbUserName;
+	private String mbUserName;	//이름
 	
-	private String mbUserMoney;
+	private String mbUserMoney;	//충전된 금액
 
-
-
-	public MemberVO(String id, boolean isAdmin, String mbUserId, String mbUserPw, String mbUserName,
-			String mbUserMoney) {
-		super();
-		this.id = id;
-		this.isAdmin = isAdmin;
-		this.mbUserId = mbUserId;
-		this.mbUserPw = mbUserPw;
-		this.mbUserName = mbUserName;
-		this.mbUserMoney = mbUserMoney;
-	}
 
 	public String getId() {
 		return id;

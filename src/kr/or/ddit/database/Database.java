@@ -12,24 +12,14 @@ public class Database {
 	private List<BusVO> bsList = new ArrayList<BusVO>();
 	private List<TicketVO> tkList = new ArrayList<TicketVO>();
 	
-	public List<MemberVO> getMemberVOList() {
-		return mbList;
-	}
-	
-	public List<BusVO> getBusVOList() {
-		return bsList;
-	}
-	
-	public List<TicketVO> getTicketVOList() {
-		return tkList;
-	}
-	
-	public Database(){
-		//초기값을 테스트로 넣어준다
-		MemberVO admin1 = new MemberVO("0",true,"admin","admin","관리자","10000");
-		MemberVO user1 = new MemberVO("1",false,"kkk3206","1234","김수환","90000");
-
-		mbList.add(admin1);
-		mbList.add(user1);
+	boolean deleteMember(String mem_id){
+		for (int i = 0; i < mbList.size(); i++) {
+			if(mbList.get(i).getId() == mem_id){
+				mbList.remove(i);
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

@@ -14,17 +14,6 @@ public class BusVO {
 	
 	private String bsKind;	//일반?우등?
 
-	
-	
-	public BusVO(String id, String bsRoute, String bsPrice, String bsDepartureTime, String bsSeat, String bsKind) {
-		super();
-		this.id = id;
-		this.bsRoute = bsRoute;
-		this.bsPrice = bsPrice;
-		this.bsDepartureTime = bsDepartureTime;
-		this.bsSeat = bsSeat;
-		this.bsKind = bsKind;
-	}
 
 	public String getId() {
 		return id;
