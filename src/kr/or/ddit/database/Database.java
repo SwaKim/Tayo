@@ -50,8 +50,8 @@ public class Database {
 	public boolean createMember(MemberVO membervo){
 //		mbList.contains()
 		for (int i = 0; i < mbList.size(); i++) {
-			if(mbList.get(i).getMbUserId() == membervo.getMbUserId()){
-				return false;
+			if(mbList.get(i).getMbUserId() == membervo.getMbUserId()){		//회원 중복 체크
+				return false;												//중복이면 가입을 중지
 			}
 		}
 		return mbList.add(membervo);

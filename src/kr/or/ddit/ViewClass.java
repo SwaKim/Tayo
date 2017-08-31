@@ -41,13 +41,12 @@ public class ViewClass {
 	         String input = sc.next();
 	         
 	         switch (input) {
-	         case "1":
+	         case "1":	case "로그인":
 	            login();
 	            break;
-	         case "2":
+	         case "2":	case "회원가입":
 	            joinMenu();
 	            break;
-	   
 	         default:
 	            System.out.println("잘못된 입력입니다.");
 	            continue;
@@ -63,25 +62,26 @@ public class ViewClass {
 	      System.out.print("아이디 : ");
 	      join.setMbUserId(sc.next());
 	      
-	      System.out.print("비번 : ");
-	      String userPw = sc.next();
-	      
-	      System.out.print("비번확인 : ");
-	      String userPwChk = sc.next();
-	      
+	      //비밀번호 입력구간 시작
+	      String userPw;
+	      String userPwChk;
+	      do {
+	    	  System.out.print("비밀번호 : ");
+	    	  userPw = sc.next();
+		      
+	    	  System.out.print("암호확인 : ");
+		      userPwChk = sc.next();
+		      
+		} while (!userPw.equals(userPwChk));
 	      join.setMbUserPw(userPw);
-	      while (userPw.equals(userPwChk)) {
-	         
-	      }
-	      
-	      
+	      //비밀번호 입력구간 끝
 	      
 	      
 	      System.out.print("이름 : ");
 	      join.setMbUserName(sc.next());
-	      
-	      startMethod(); // 마지막줄
+	      //메인메뉴로 돌아감
 	   }
+	 
 	   
 	   
 	   //로그인메뉴
@@ -168,7 +168,7 @@ public class ViewClass {
 	   
 	   //관리자메뉴
 	   public void adminMenu(){
-	      System.out.println("아 무 렇 게 나 !");
+	      System.out.println("현우석");
 	      System.out.println("1 : 회원관리");
 	      System.out.println("2 : 노선관리");
 	      System.out.println("3 : 정산");
