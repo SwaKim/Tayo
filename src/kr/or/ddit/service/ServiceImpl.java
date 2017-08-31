@@ -2,7 +2,9 @@ package kr.or.ddit.service;
 
 import java.util.Scanner;
 
+import kr.or.ddit.database.Database;
 import kr.or.ddit.vo.BusVO;
+import kr.or.ddit.vo.MemberVO;
 
 /**
  * @Class Name : ServiceImpl.java
@@ -25,22 +27,24 @@ public class ServiceImpl implements Service{
 
 	Scanner sc = new Scanner(System.in);
 
+	Database db = new Database();
+
 	@Override
-	public void joinMb(String mbUserId, String mbUserPw) {
-		// TODO Auto-generated method stub
-		
+	public boolean joinMb(MemberVO member) {
+
+		return db.createMember(member);
 	}
 
 	@Override
 	public boolean delMb(String id) {
-		// TODO Auto-generated method stub
-		return false;
+
+		return db.deleteMember(id);
 	}
 
 	@Override
 	public boolean addBus(BusVO busvo) {
-		// TODO Auto-generated method stub
-		return false;
+
+		return db.createBus(busvo);
 	}
 
 	@Override
@@ -51,13 +55,13 @@ public class ServiceImpl implements Service{
 	}
 
 	@Override
-	public void changeBus(String asId, String forId) {
+	public boolean changeBus(String id, BusVO bus) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
 	@Override
-	public int chargeMoney(int money) {
+	public int chargeMoney(String id, int money) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

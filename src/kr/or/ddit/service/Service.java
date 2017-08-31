@@ -26,7 +26,7 @@ import kr.or.ddit.vo.TicketVO;
 public interface Service {//대략적인 기능
 //-----------------------CRUD에 관한 메서드---------------------	
 	
-	public void joinMb(String mbUserId, String mbUserPw) ;
+	public boolean joinMb(MemberVO member);
 	
 	/**
 	 * 회원 삭제
@@ -35,7 +35,7 @@ public interface Service {//대략적인 기능
 	 * @param id
 	 * @return boolean
 	 */
-	boolean delMb(String id);
+	public boolean delMb(String id);
 	
 	/**
 	 * 노선 추가
@@ -43,45 +43,43 @@ public interface Service {//대략적인 기능
 	 * @param bsRoute
 	 * @return boolean
 	 */
-	boolean addBus(BusVO busvo);
-/*	view  class
-	BusVO bus = new ;
-	bus.setid, setruuajkllllkljk
-	성공*/
+	public boolean addBus(BusVO busvo);
 	
 	/**
 	 * 노선삭제
 	 * @param id
 	 */
-	boolean removeBus(String id);
+	public boolean removeBus(String id);
 
 	/**
 	 * 노선변경
+	 * 선택한 노선의 인덱스로 노선 삭제메서드를 실행하고 변경할 노선의 VO를 생성한다
 	 * @param asId
 	 * @param forId
 	 */
-	void changeBus(String asId, String forId);
+	public boolean changeBus(String id,BusVO bus);
 
 	/**
 	 * 충전
+	 * 로그인된 유저의 돈을 충전한다.
 	 * @param money
 	 * @return int
 	 */
-	int chargeMoney(int money);
+	public int chargeMoney(String id, int money);
 	
 	/**
 	 * 결제
 	 * @param id
 	 * @return int
 	 */
-	int payBusTicket(String id);
+	public int payBusTicket(String id);
 	
 	/**
 	 * 환불
 	 * @param id
 	 * @return int
 	 */
-	int refundTicket(String id);
+	public int refundTicket(String id);
 	
 //----------------------시간 관리에 관한 메서드---------------------
 	//구입시간
@@ -97,10 +95,10 @@ public interface Service {//대략적인 기능
 	//메인메뉴
 	
 	//입력
-	String input();
+	public String input();
 	//출력
 
-	String input(int index);
+	public String input(int index);
 	
 	//회원메뉴
 	
