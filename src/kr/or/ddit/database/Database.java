@@ -47,14 +47,18 @@ public class Database {
 	 *@param 회원VO
 	 *@return 결과,리스트추가
 	 */
-	public boolean createMember(MemberVO membervo){
-//		mbList.contains()
+	public boolean createMember(MemberVO membervo){//중복체크는 별도의 메서드
+		return mbList.add(membervo);
+	}
+	
+	public boolean idCheck(String muid){
 		for (int i = 0; i < mbList.size(); i++) {
-			if(mbList.get(i).getMbUserId() == membervo.getMbUserId()){		//회원 중복 체크
-				return false;												//중복이면 가입을 중지
+			if(mbList.get(i).getMbUserId().equals(muid)){		//회원 중복 체크
+				return false;									//중복이면 가입을 중지
 			}
 		}
-		return mbList.add(membervo);
+		return true;
+		
 	}
 	
 	/**회원DB-회원삭제
@@ -80,7 +84,8 @@ public class Database {
 	 */
 	public boolean createBus(BusVO busVO){
 		for (int i = 0; i < bsList.size(); i++) {
-			if(bsList.get(i).getBsRoute() == busVO.getBsRoute() && bsList.get(i).getBsKind() == busVO.getBsKind() ){
+			if(bsList.get(i).getBsRoute().equals(busVO.getBsRoute()) &&
+				bsList.get(i).getBsKind().equals(busVO.getBsKind()) ){
 				return false;
 			}
 		}

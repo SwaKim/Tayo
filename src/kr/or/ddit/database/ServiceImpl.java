@@ -2,6 +2,9 @@ package kr.or.ddit.service;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
+
+import javax.xml.bind.ParseConversionEvent;
 
 import kr.or.ddit.database.Database;
 import kr.or.ddit.vo.BusVO;
@@ -26,11 +29,12 @@ import kr.or.ddit.vo.TicketVO;
  */
 public class ServiceImpl implements Service{
 	private static ServiceImpl service = null;
-
 	Database db = new Database();
 	
 	int idIndex = 0;//디비들 인덱스값...
-
+	Scanner sc = new Scanner(System.in);
+	
+	
 	@Override
 	public boolean joinMb(MemberVO member) {
 		
@@ -42,72 +46,30 @@ public class ServiceImpl implements Service{
 
 	@Override
 	public boolean delMb(String id) {
-
+		
+		
 		return db.deleteMember(id);
 	}
 
 	@Override
 	public boolean addBus(BusVO busvo) {
-
+		
 		return db.createBus(busvo);
 	}
 
 	@Override
 	public boolean removeBus(String id) {
-		return false;
-		// TODO Auto-generated method stub
+		
+		return db.deleteBus(id);
 		
 	}
-
 	@Override
-	public boolean changeBus(String id,BusVO bus) {
-		return false;
+	public boolean craTicket(TicketVO ticket){
 		
-	}
-	
-	/**
-	 * 환불메서드
-	 * 회원이 가지고있는 티켓이면 환불 아니면 실패 
-	 * @param 로그인된 회원index, 티켓 index
-	 * @return 티켓 가격
-	 */
-	@Override
-	public int chargeMoney(String id, int money) {
-		return 0;
-	}
-	
-	/**
-	 * 티켓구입메서드
-	 * 회원이 티켓을 구매  
-	 * @param 로그인 Id, 티켓 금액
-	 * @return 티켓 가격
-	 */
-	@Override
-	public boolean payBusTicket(TicketVO ticket) {
+		
 		return db.createTicket(ticket);
-	}
-
-	/**
-	 * 환불메서드
-	 * 회원이 가지고있는 티켓이면 환불 아니면 실패 
-	 * @param 로그인된 회원index, 티켓 index
-	 * @return 환불성공여부
-	 */
-	@Override
-	public boolean refundTicket(String loginid, String tinput) {
-		List<TicketVO> tl = db.getTkList(loginid);
-		for (int i = 0; i < tl.size(); i++) {
-			if(tl.get(i).getMem_id().equals(tinput)){
-				return db.deleteTicket(tinput);
-				
-			}
-			
-		}
-		return false;
 		
 	}
-	
-	
 	//아이디 중복체크
 	
 	//페스워드
@@ -143,11 +105,69 @@ public class ServiceImpl implements Service{
 	}
 
 	@Override
-	public boolean craTicket(TicketVO ticket) {
-		// TODO Auto-generated method stub
+	public boolean changeBus(String id,BusVO bus) {
 		return false;
+		
+	}
+	/**
+	 * 환불메서드
+	 * 회원이 가지고있는 티켓이면 환불 아니면 실패 
+	 * @param 로그인된 회원index, 티켓 index
+	 * @return 티켓 가격
+	 */
+	@Override
+	public int chargeMoney(String id, int money) {
+		return 0;
+	}
+	
+	/**
+	 * 티켓구입메서드
+	 * 회원이 티켓을 구매  
+	 * @param 로그인 Id, 티켓 금액
+	 * @return 티켓 가격
+	 */
+	@Override
+	public int payBusTicket(String id, int money) {
+		return 0;
 	}
 	
 	
+	/**
+	 * 환불메서드
+	 * 회원이 가지고있는 티켓이면 환불 아니면 실패 
+	 * @param 로그인된 회원index, 티켓 index
+	 * @return 환불성공여부
+	 */
+ 
+	@Override
+	public boolean refundTicket(String loginid, String tinput) {
+		List<TicketVO> tl = db.getTkList(loginid);
+		for (int i = 0; i < tl.size(); i++) {
+			if(tl.get(i).getMem_id().equals(tinput)){
+				return db.deleteTicket(tinput);
+				
+			}
+			
+		}
+		return false;
+		
+	}
+
+
+
+	@Override
+	public String input(int index) {
+		try {
+			String input = sc.next();
+			return input;
+		} catch (Exception e) {
+			return "다시 입력해주세요";
+		}
+	}
+
+	
+
+
+
 
 }
