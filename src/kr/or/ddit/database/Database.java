@@ -16,16 +16,39 @@ public class Database {
 	 * 관리자모드에서 사용할 회원목록 조회
 	 *@return 멤버리스트
 	 */
-	public List<MemberVO> getMbList() {
-		return mbList;
+	public String getMbList(int index) {
+		String toString = mbList.get(index).getId()+"\t"+
+				mbList.get(index).getMbUserId()+"\t"+
+				mbList.get(index).getMbUserName()+"\t"+
+				mbList.get(index).getMbUserMoney()+"\t"+
+				mbList.get(index).isAdmin();
+		return toString;
+	}
+	
+	public int getListSize(String kind){
+		switch (kind) {
+		case "bus":
+			return bsList.size();
+		case "member":
+			return mbList.size();
+		case "ticket":
+			return tkList.size();
+		}
+		return 0;
 	}
 	
 	/**버스DB-버스목록
 	 * 회원, 관리자메뉴
 	 *@return 버스리스트
 	 */
-	public List<BusVO> getBsList() {
-		return bsList;
+	public String getBsList(int index) {
+		
+		String toString = bsList.get(index).getId()+"\t"+
+				bsList.get(index).getBsRoute()+"\t"+
+				bsList.get(index).getBsPrice()+"\t"+
+				bsList.get(index).getBsDepartureTime()+"\t"+
+				bsList.get(index).getBsSeat();
+		return toString;
 	}
 	
 	/**티켓DB-티켓목록
@@ -64,7 +87,6 @@ public class Database {
 			}
 		}
 		return true;
-		
 	}
 	
 	/**회원DB-회원삭제
@@ -141,5 +163,20 @@ public class Database {
 			}
 		}
 		return false;
+	}
+	
+	/**회원DB-잔액 충전
+	 * 회원인덱스을 DB에 충전 수행
+	 *@param 회원 인덱스
+	 *@return 충전후 잔액
+	 */
+	public int chargeMoney(String id, int money){
+		for (int i = 0; i < tkList.size(); i++) {
+			if(mbList.get(i).getId() == id){
+				mbList.get(i).setMbUserMoney(money);
+				return mbList.get(i).getMbUserMoney();
+			}
+		}
+		return -1;
 	}
 }

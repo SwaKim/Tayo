@@ -42,12 +42,22 @@ public interface Service {//대략적인 기능
 		 * @return boolean
 		 */
 		public boolean delMb(String id);
-
 		
+		/**
+		 * 관리자:회원리스트
+		 * 
+		 * @param id
+		 * @return boolean
+		 */
+		public boolean memberList();
+
+		/**
+		 * 회원가입:아이디 중복체크
+		 * @param 입력된 멤버id
+		 * @return true(적합) / false(부적합)
+		 */
 		public boolean checkId(String menberid);
 		
-		
-		public List<MemberVO> memberList(Boolean isAdmin);
 		/**
 		 * 노선 추가
 		 * busVO의 데이터를 view에서 입력받은 뒤 받아와서
@@ -64,9 +74,11 @@ public interface Service {//대략적인 기능
 		public boolean removeBus(String id);
 		
 		/**
-		 * 로그인
-		 * @param alba_pw
-		 * @return true(적합) / false(부적합)
+		 * 로그인체크
+		 * id와 pwd 체크해준다. 
+		 * 
+		 * @param userid, userpw
+		 * @return int
 		 */
 		public int loginCheck(String userid, String userpw);
 		
@@ -81,9 +93,8 @@ public interface Service {//대략적인 기능
 		/**
 		 * 노선변경
 		 * 노선의 아이디를 받아서 전에 있던 노선과 바꿀 노선을 바꿔준다.
-		 * @param asId
-		 * @param forId
-		 * @param Id
+		 * @param id , bus
+		 * @param Map
 		 */
 		public boolean changeBus(String id,BusVO bus);
 
@@ -103,9 +114,10 @@ public interface Service {//대략적인 기능
 		public boolean payBusTicket(TicketVO ticket);
 		
 		/**
-		 * 환불
-		 * @param id
-		 * @return int
+		 * 환불메서드
+		 * 회원이 가지고있는 티켓이면 환불 아니면 실패 
+		 * @param 로그인된 회원index, 티켓 index
+		 * @return 환불성공여부
 		 */
 		public boolean refundTicket(String loginid, String tinput);
 	

@@ -12,7 +12,7 @@ public class MemberVO {
 	
 	private String mbUserName;	//이름
 	
-	private String mbUserMoney;	//충전된 금액
+	private int mbUserMoney;	//충전된 금액
 
 
 	public String getId() {
@@ -55,12 +55,12 @@ public class MemberVO {
 		this.mbUserName = mbUserName;
 	}
 
-	public String getMbUserMoney() {
+	public int getMbUserMoney() {
 		return mbUserMoney;
 	}
 
-	public void setMbUserMoney(String mbUserMoney) {
-		this.mbUserMoney = mbUserMoney;
+	public void setMbUserMoney(int mbUserMoney) {
+		this.mbUserMoney += mbUserMoney;
 	}
 
 	
