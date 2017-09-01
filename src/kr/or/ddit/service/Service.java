@@ -42,6 +42,9 @@ public interface Service {//대략적인 기능
 		 * @return boolean
 		 */
 		public boolean delMb(String id);
+
+		
+		public boolean checkId(String menberid);
 		
 		
 		public List<MemberVO> memberList(Boolean isAdmin);
@@ -53,42 +56,28 @@ public interface Service {//대략적인 기능
 		 */
 		boolean addBus(BusVO busvo);
 		
-
-		/**
-		 * 로그인 (정규표현식)
-		 * @param alba_pw
-		 * @return true(적합) / false(부적합)
-		 * 기준 = 알파벳소문자, 대문자, 숫자만 가능하며 6~12글자만.
-		 * 
-		 */
-		
-		public boolean checkId(String menberid);
 		
 		/**
 		 * 노선삭제
 		 * @param id
 		 */
 		public boolean removeBus(String id);
-
-		public boolean craTicket(TicketVO ticket);
 		
-		
-		public boolean loginCheck(String userid, String userpw);
 		/**
-		 * 회원 삭제
-		 * List에서 id와 일치하는 것을 찾아
-		 * remove해준다.
-		 * @param id
-		 * @return boolean
+		 * 로그인
+		 * @param alba_pw
+		 * @return true(적합) / false(부적합)
 		 */
+		public int loginCheck(String userid, String userpw);
 		
+		/**
+		 * 구매목록 조회
+		 * 로그인된 아이디의 구매리스트를 반환
+		 * @param 로그인된 회원의 인덱스값
+		 * @return 리스트
+		 */
 		public List<TicketVO> ticketList(String loginid);
-		/**
-		 * 노선 추가
-		 * busVO의 데이터를 view에서 입력받은 뒤 받아와서
-		 * @param bsRoute
-		 * @return boolean
-		 */
+		
 		/**
 		 * 노선변경
 		 * 노선의 아이디를 받아서 전에 있던 노선과 바꿀 노선을 바꿔준다.
@@ -118,7 +107,6 @@ public interface Service {//대략적인 기능
 		 * @param id
 		 * @return int
 		 */
-		//public boolean refundTicket(String id);
 		public boolean refundTicket(String loginid, String tinput);
 	
 //----------------------시간 관리에 관한 메서드---------------------

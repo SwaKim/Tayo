@@ -118,14 +118,18 @@ public class ServiceImpl implements Service{
 	}
 	
 	@Override
-	public boolean loginCheck(String userid, String userpw){
+	public int loginCheck(String userid, String userpw){
 		for (int i = 0; i < db.getMbList().size(); i++) {
-			if(mbList.get(i).getMbUserId().equals(muid)){		//회원 중복 체크
-				return false;												//중복이면 가입을 중지
+			if((db.getMbList().get(i).getMbUserId().equals(userid))){		//회원 중복 체크
+				if(!(db.getMbList().get(i).getMbUserPw().equals(userpw))){
+					return 1;
+				}
 			}
 		}	
-		
-		return false;		
+		if(!(db.getMbList().contains(userid))){
+			return 2;
+		}
+		return 0;		
 	}
 	
 	@Override
@@ -141,13 +145,6 @@ public class ServiceImpl implements Service{
 		
 		return db.getTkList(loginid);
 	}
-
-	@Override
-	public boolean craTicket(TicketVO ticket) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
 	
 
 }

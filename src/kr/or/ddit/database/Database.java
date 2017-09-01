@@ -27,6 +27,7 @@ public class Database {
 	public List<BusVO> getBsList() {
 		return bsList;
 	}
+	
 	/**티켓DB-티켓목록
 	 * 전체 티켓목록 중에서 해당 회원이 구입한 리스트를 추려내 반환
 	 *@param 구매회원 인덱스
@@ -51,6 +52,11 @@ public class Database {
 		return mbList.add(membervo);
 	}
 	
+	/**회원DB-회원추가
+	 * 생성된 회원객체를 DB에서 찾아, 중복된 ID가 없을시 생성수행
+	 *@param 회원VO
+	 *@return 결과,리스트추가
+	 */
 	public boolean idCheck(String muid){
 		for (int i = 0; i < mbList.size(); i++) {
 			if(mbList.get(i).getMbUserId().equals(muid)){		//회원 중복 체크
