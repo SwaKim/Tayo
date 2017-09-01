@@ -101,7 +101,7 @@ public class ViewClass {
    // 관리자용 회원목록보기
       public void memberList(){
          System.out.println("회원목록을 표시합니다.");
-         System.out.println(service.memberList(true));    //무조건 관리자  
+         System.out.println(service.memberList());    //무조건 관리자  
 
       }
 
@@ -315,9 +315,8 @@ public class ViewClass {
       System.out.println("버스리스트");              
       String removeBus = sc.next();
       
-      temp.put("removeBus", removeBus);
       
-      boolean busCheck = service.removeBus(bus);    
+      boolean busCheck = service.removeBus(removeBus);    
       
       if (busCheck) {
          System.out.println("추가 성공하셨습니다.");
@@ -329,7 +328,7 @@ public class ViewClass {
    public void reBus(){
       System.out.println("=== 노선변경");
       System.out.println("노선목록을 표시합니다.");
-      System.out.println("버스리스트");++
+      System.out.println("버스리스트");
    }
 
    public void calc(){

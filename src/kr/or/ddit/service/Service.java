@@ -1,6 +1,7 @@
 package kr.or.ddit.service;
 
 import java.util.List;
+import java.util.Map;
 
 import kr.or.ddit.vo.BusVO;
 import kr.or.ddit.vo.MemberVO;
@@ -46,10 +47,16 @@ public interface Service {//대략적인 기능
 		/**
 		 * 관리자:회원리스트
 		 * 
-		 * @param id
 		 * @return boolean
 		 */
 		public boolean memberList();
+		
+		/**
+		 * 관리자:버스리스트
+		 * 
+		 * @return boolean
+		 */
+		public boolean busList();
 
 		/**
 		 * 회원가입:아이디 중복체크
@@ -64,7 +71,7 @@ public interface Service {//대략적인 기능
 		 * @param bsRoute
 		 * @return boolean
 		 */
-		boolean addBus(BusVO busvo);
+		boolean addBus(Map<String, String> busadd);
 		
 		
 		/**
@@ -111,7 +118,7 @@ public interface Service {//대략적인 기능
 		 * @param TicketVO 소유권 정보가 담긴
 		 * @return 성공여부
 		 */
-		public boolean payBusTicket(TicketVO ticket);
+		public boolean payBusTicket(Map<String, String> ticket);
 		
 		/**
 		 * 환불메서드
