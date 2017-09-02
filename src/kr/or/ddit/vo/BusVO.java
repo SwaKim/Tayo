@@ -1,8 +1,10 @@
 package kr.or.ddit.vo;
 
+import java.util.Map;
+
 public class BusVO {
 	//어느 VO클래스건 index의 id
-	private String id; //기본키
+	private int id; //기본키
 	
 	private String bsRoute;	//출발지-도착지
 	
@@ -10,16 +12,16 @@ public class BusVO {
 	
 	private String bsDepartureTime;	//출발시간
 	
-	private String bsSeat;	//좌석
+	private int[] bsSeatList;	//좌석정보
 	
 	private String bsKind;	//일반?우등?
 
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -47,12 +49,17 @@ public class BusVO {
 		this.bsDepartureTime = bsDepartureTime;
 	}
 
-	public String getBsSeat() {
-		return bsSeat;
+	
+	public int[] getBsSeatlist() {
+		return bsSeatList;
 	}
 
-	public void setBsSeat(String bsSeat) {
-		this.bsSeat = bsSeat;
+	public void setBsSeat(int size) {
+		int[] seat = new int[size];; 
+		for (int i = 0; i < seat.length; i++) {
+			seat[i] = i;
+		}
+		this.bsSeatList = seat; 
 	}
 
 	public String getBsKind() {
@@ -66,7 +73,7 @@ public class BusVO {
 	@Override
 	public String toString() {
 		return "BusVO [id=" + id + ", bsRoute=" + bsRoute + ", bsPrice=" + bsPrice + ", bsDepartureTime="
-				+ bsDepartureTime + ", bsSeat=" + bsSeat + ", bsKind=" + bsKind + "]";
+				+ bsDepartureTime + ", bsSeat=" + bsSeatList + ", bsKind=" + bsKind + "]";
 	}
 	
 	

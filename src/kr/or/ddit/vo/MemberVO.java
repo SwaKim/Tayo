@@ -2,7 +2,7 @@ package kr.or.ddit.vo;
 
 public class MemberVO {
 	//어느 VO클래스건 index의 id
-	private String id; 			//기본키
+	private int id; 			//기본키
 	
 	private boolean isAdmin;	//분류 = 회원 /관리자
 	
@@ -15,12 +15,12 @@ public class MemberVO {
 	private int mbUserMoney;	//충전된 금액
 
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setId(int mbIndex) {
+		this.id = mbIndex;
 	}
 
 	public boolean isAdmin() {
