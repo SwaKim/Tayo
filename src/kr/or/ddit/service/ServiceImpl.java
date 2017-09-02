@@ -2,11 +2,8 @@ package kr.or.ddit.service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import kr.or.ddit.database.Database;
-import kr.or.ddit.vo.BusVO;
-import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.TicketVO;
 
 /**
@@ -16,22 +13,22 @@ import kr.or.ddit.vo.TicketVO;
  * @author 현우석, 이중우, 김수환
  * @since 2017.08.28.
  * @version 1.0
- * @see <pre>
+ * @see
+ * 
+ *      <pre>
  * << 개정이력(Modification Information) >>
  *    수정일       
  *    -------      -------    -------------------
  *    2017.08.29.   현우석      최초생성
  * Copyright (c) 2017 by DDIT  All right reserved
- * </pre>
+ *      </pre>
  */
 public class ServiceImpl implements Service {
    Database db = new Database();
 
-
    // 회원추가
    @Override
    public boolean joinMb(Map<String, String> member) {
-
 
       return db.createMember(member);
    }
@@ -53,23 +50,30 @@ public class ServiceImpl implements Service {
    // 아이디체크
    // 아이디체크
    @Override
-    public int loginCheck(Map<String, String> login){
+   public int loginCheck(Map<String, String> login) {
       
-      if (db.readIdPwFromDB(login).get("userId").equals(login.get("id"))) { // 회원
+      try {
+         if (db.readIdPwFromDB(login).get("userId").equals(login.get("userId"))) { // 회원
 
-         if (!db.readIdPwFromDB(login).get("userPw").equals(login.get("pw"))) {
-            return -1;//비밀번호틀림
-         }else{
-            if(db.readIdPwFromDB(login).get("isAdmin").equals("true")){
-               return -2;//관리자 로그인
+            if (!db.readIdPwFromDB(login).get("userPw").equals(login.get("userPw"))) {
+               return -1;// 비밀번호틀림
                
-            }else{
-               return Integer.parseInt(db.readIdPwFromDB(login).get("id"));//일반 로그인완료
+            } else {
+               if (db.readIdPwFromDB(login).get("isAdmin").equals("true")) {
+                  return -2;// 관리자 로그인
+
+               } else {
+                  return Integer.parseInt(db.readIdPwFromDB(login).get("id"));// 일반
+                                                               // 로그인완료
+               }
             }
          }
+      } catch (NullPointerException e) {
+         return -3;
       }
       
-      return -3;//아이디 없음.      
+
+      return -3;// 아이디 없음.
    }
 
    // 버스추가 미완
@@ -82,52 +86,45 @@ public class ServiceImpl implements Service {
    // 버스삭제
    @Override
    public boolean removeBus(int id) {
-      
+
       return db.deleteBus(id);
    }
-
-//   @Override
-//   public boolean changeBus(String oldid, Map<String, String> businpo) {
-//      
-//      
-//      
-//      return false;
-//
-//   }
 
    // 충전
    @Override
    public int chargeMoney(int id, int money) {
-
-      return 0;
+      int result = db.chargeMoney(id, money);
+      return result;
    }
 
    // 티켓구입 = 티켓 생성
    @Override
-   public boolean payBusTicket(Map<String, String> ticket) {
+   public int payBusTicket(Map<String, String> ticket) {
 
-      return false;// db.createTicket(ticket);
-   }
-   
-   // 티켓구입 = 티켓 생성
-   @Override
-   public boolean deleteTicket(int ticketid) {
-
-      return db.deleteTicket(ticketid);// db.createTicket(ticket);
-   }
-
-   // 환불
-   @Override
-   public boolean refundTicket(int loginid, int tinput) {
-      List<TicketVO> tl = db.getTkList(loginid);
-      for (int i = 0; i < tl.size(); i++) {
-         if (tl.get(i).getMemId() == tinput) {
-            return db.deleteTicket(tinput);
-
-         }
-
+      int result = db.createTicket(ticket); 
+      if(result == -1){
+         return -1;
+      }else if(result == -2){
+         return -2;
+      }else if(result == -3){
+         return -3;
       }
-      return false;
+         
+      return result;// db.createTicket(ticket);
+   }
+
+
+
+   // 환불 -1  티켓이 없다. -2 구매자가 아니다.
+   @Override
+   public int refundTicket(int loginid, int tinput) {
+      int result = db.deleteTicket(loginid, tinput);
+      if (result == -1) {
+         return -1;
+      } else if (result == -2) {
+         return -2;
+      }
+      return result;
    }
 
    // 버스리스트
@@ -155,34 +152,44 @@ public class ServiceImpl implements Service {
 
          }
 
+         
+      }
+      return true;
+   }
+
+   // 티켓리스트
+   @Override
+   public boolean ticketList(int loginid) {
+      if (db.getTicketListSize(loginid) == 0) {
+         return false;
+      } else {
+         for (int i = 0; i < db.getTicketListSize(loginid); i++) {
+
+            System.out.println(db.getTkListString(i));
+
+         }
+
          return true;
       }
    }
+   
+// 관리자용티켓리스트
+   @Override
+   public boolean totalTicketList() {
+         for (int i = 0; i < db.getTotalTicketList().size(); i++) {
+            System.out.println(db.getTotalTicketList().get(i));
+         }
 
-   //티켓리스트
-   @Override
-   public List<TicketVO> ticketList(int loginid) {
-      
-      return db.getTkList(loginid);
+         return true;
    }
-   
-   
-   
-   
-   //버스종류 자리 리스트
+
+
+   // 총금액
    @Override
-   public boolean busKind(String kindbus) {
-      
-      
-      return false;
+   public int allPayMoney() {
+      int money = db.allPayMoney();
+      return money;
    }
+
    
-   //총금액
-   @Override
-   public boolean allPayMoney(){
-      
-      
-      
-      return false;      
-   }
 }
