@@ -155,20 +155,15 @@ public class ServiceImpl implements Service {
 		return true;
 	}
 
-	// 티켓리스트
+	// 회원메뉴티켓리스트
 	@Override
 	public boolean showTicketList(int loginid) {
-		if (db.getTicketListSize(loginid) == 0) {
-			return false;
-		} else {
-			for (int i = 0; i < db.getTicketListSize(loginid); i++) {
-
-				System.out.println(db.getTicketListString(i));
-
+		for (int i = 0; i < db.getTotalTicketList().size(); i++) {
+			if (db.getTicketListString(loginid).get(i)!=null) {
+				System.out.println(db.getTicketListString(loginid).get(i));
 			}
-
-			return true;
 		}
+		return true;
 	}
 
 	// 관리자용티켓리스트

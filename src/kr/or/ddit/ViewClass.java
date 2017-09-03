@@ -81,8 +81,7 @@ public class ViewClass {
 
 			if (m1.find()) {
 				if (!service.checkJoinId(userId)) {								// 아이디 중복일때
-					System.out.print("┃\tid중복입니다. 다시 아이디를 입력해주세요\n┃\t아이디 : ");
-					userId = sc.next();
+					System.out.print("┃\tid중복입니다. 다시 아이디를 입력해주세요");
 				} else {
 					join.put("userId", userId);// true;
 					break;
@@ -145,7 +144,7 @@ public class ViewClass {
 	    clear();																//화면정리
 		System.out.println("┏━━━━어서오세요. 아이디를 입력해주세요 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
 		System.out.println("┃");
-		System.out.print("┣━━━━아이디 :");
+		System.out.print("┣━━━━아이디 : ");
 		String userId = sc.next();
 		System.out.println("┃");
 
@@ -265,15 +264,17 @@ public class ViewClass {
 
 			switch (input) {
 			case "1":
-				System.out.print("취소할 티켓을 선택해주세요 : ");
+				System.out.print("취소할 티켓의 번호를 입력해주세요 : ");
 				int tiket = sc.nextInt();
 				int result = service.refundTicket(session, tiket);
-				if (result == 0) {
-					System.out.println("티켓이 환불되었습니다.");
-				} else if (result == -1) {
+				if (result == -1) {
 					System.out.println("해당티켓이 없습니다.");
 				} else if (result == -2) {
 					System.out.println("해당티켓의 구매자가 아닙니다.");
+				} else {
+					System.out.println("티켓이 환불되었습니다.");
+
+					System.out.println("고객님께서 현재 보유하신 금액은 "+result+"원 입니다.");
 				}
 				break;
 			case "2":
@@ -343,26 +344,46 @@ public class ViewClass {
 
 	// 회원관리
 	public void manageMember() {
-	    clear();																//화면정리
-		System.out.println("┏━━━━회원관리━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
-		System.out.println("┃");
-		System.out.println("┃\t번호\tID\t이름\t잔고\t관리자");
-		service.showMemberList();
-		System.out.println("┃");
-		System.out.print("┗━━━━삭제할 회원의 번호를 입력하세요 : ");
-		int delUserIndex = 0;
+		while(true){
 
-		try {
-			delUserIndex = sc.nextInt();
-		} catch (Exception e) {
-			System.out.println("숫자만 입력해 주세요.");
-		}
-		boolean UserCheck = service.deleteMember(delUserIndex);
+			clear();																//화면정리
+			System.out.println("┏━━━━회원관리━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+			System.out.println("┃");
+			System.out.println("┃\t번호\tID\t이름\t잔고\t관리자");
+			service.showMemberList();
+			System.out.println("┃");
+			System.out.println("┣━━━━메뉴");
+			System.out.println("┃\t");
+			System.out.println("┃\t1 : 회원 삭제하기");
+			System.out.println("┃\t2 : 뒤로가기");
+			System.out.println("┃\t");
+			System.out.print("┗━━━━━━━━원하는 메뉴를 입력하세요 : ");
+			String input = sc.next();
 
-		if (UserCheck) {
-			System.out.println("삭제에 성공하셨습니다.");
-		} else {
-			System.out.println("다시한번 확인해 주세요.");
+			switch (input) {
+			case "1":
+				System.out.print("삭제할 회원의 번호를 입력하세요 : ");
+				int delUserIndex = 0;
+
+				try {
+					delUserIndex = sc.nextInt();
+				} catch (Exception e) {
+					System.out.println("숫자만 입력해 주세요.");
+				}
+				boolean UserCheck = service.deleteMember(delUserIndex);
+
+				if (UserCheck) {
+					System.out.println("삭제에 성공하셨습니다.");
+				} else {
+					System.out.println("다시한번 확인해 주세요.");
+				}
+				break;
+			case "2":
+				return;
+			default:
+				System.out.println("잘못된 입력입니다.");
+				continue;
+			}
 		}
 	}
 
@@ -458,7 +479,7 @@ public class ViewClass {
 		boolean busCheck = service.removeBus(removeBusIndex);
 
 		if (busCheck) {
-			System.out.println(methodKind+"되었하셨습니다.");
+			System.out.println(removeBusIndex+"번을 "+methodKind+"합니다.");
 		} else {
 			System.out.println("다시한번 확인해 주세요.");
 		}
@@ -476,7 +497,7 @@ public class ViewClass {
 		System.out.println("┏━━━━ 정산   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
 		System.out.println("┃");
 		System.out.println("┃\t번호\t노선\t출발시간\t\t구매시간\t\t버스등급\t좌석\t가격\t구매자");
-		service.showTotalTicketList();											//왜 안나오는지 모르겠네
+		service.showTotalTicketList();											//모든 티켓 열람
 		int sum = service.calcTotal();											//티켓 총 판매금액
 		System.out.println("┃");
 		System.out.println("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\t합계\t"+service.calcTotal()+"원");

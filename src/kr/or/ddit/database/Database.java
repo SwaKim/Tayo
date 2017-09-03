@@ -139,11 +139,11 @@ public class Database {
 		// "번호\t노선\t출발시간\t버스등급\t좌석"'
 		
 		String toString = "┃\t"+bsList.get(index).getId() + "\t" + 						// 번호
-				bsList.get(index).getBsRoute() + "\t" + 								// 노선
-				bsList.get(index).getBsDepartureTime() + "\t" + // 출발시간
-				bsList.get(index).getBsKind() + "\t" + 									// 버스등급
-				bsList.get(index).getBsPrice() + "\t" + 								// 가격
-				remainSeat + "\t";														// 남은좌석
+							bsList.get(index).getBsRoute() + "\t" + 					// 노선
+							bsList.get(index).getBsDepartureTime() + "\t" + 			// 출발시간
+							bsList.get(index).getBsKind() + "\t" + 						// 버스등급
+							bsList.get(index).getBsPrice() + "\t" + 					// 가격
+							remainSeat + "\t";											// 남은좌석
 		return toString;
 	}
 /*
@@ -337,22 +337,22 @@ public class Database {
 	 * @param 구매회원 인덱스
 	 * @return toString
 	 */
-	public String getTicketListString(int index) {
-		String toString = "";
-		//남은 좌석계산
+	public Map<Integer, String> getTicketListString(int loginId) {
+		Map<Integer, String> result = new HashMap<Integer, String>();
 		for (int i = 0; i < tkList.size(); i++) {
-			if (tkList.get(i).getMemId() == index) {
+			if (tkList.get(i).getMemId() == loginId) {										//구매회원인지 확인
 				// "번호\t노선\t출발시간\t구매시간\t버스등급\t좌석"
-				toString = "┃\t"+tkList.get(i).getId() + "\t" +								// 티켓 번호
+				String toString = "┃\t"+tkList.get(i).getId() + "\t" +						// 티켓 번호
 						bsList.get(tkList.get(i).getBusId()).getBsRoute() + "\t" +			// 노선
 						bsList.get(tkList.get(i).getBusId()).getBsDepartureTime() + "\t" +	// 출발시간
 						tkList.get(i).getTkBuyTime() + "\t" + 								// 구매시간
 						bsList.get(tkList.get(i).getBusId()).getBsKind() + "\t" +			// 버스등급
 						bsList.get(tkList.get(i).getBusId()).getBsPrice() + "\t" +			// 가격
 						tkList.get(i).getSeat() + "\t"; // 좌석
+						result.put(i, toString);
 			}
 		}
-		return toString;
+		return result;
 	}
 
 	/**
@@ -397,7 +397,8 @@ public class Database {
 	}
 
 	/**
-	 * 티켓DB-구매된 티켓삭제 티켓인덱스을 DB에 저장된 객체와 비교하여 해당 티켓 환불수행
+	 * 티켓DB-구매된 티켓삭제
+	 * 티켓인덱스을 DB에 저장된 객체와 비교하여 해당 티켓 환불수행
 	 * 
 	 * @param 티켓인덱스
 	 * @return int 환불후잔액, -1 해탕티켓이 존재하지않음, -2 해당티켓의 구매자가 아님
@@ -405,19 +406,19 @@ public class Database {
 	public int deleteTicket(int loginId, int ticketId) {
 		int price = 0;
 		for (int j = 0; j < mbList.size(); j++) {
-			if (tkList.get(j).getMemId() == loginId) {					//구매회원인지 확인
+			if (tkList.get(ticketId).getMemId() == loginId) {				//구매회원인지 확인
 				for (int i = 0; i < tkList.size(); i++) {
-					if (tkList.get(i).getId() == ticketId) {
+					if (tkList.get(i).getId() == ticketId) {					//해당티켓을
 						tkList.remove(i);
 						price = Integer.parseInt(bsList.get(tkList.get(ticketId).getBusId()).getBsPrice());
 						mbList.get(j).setMbUserMoney(price);
 						return mbList.get(j).getMbUserMoney();
 					}
 				}
-				return -1; // 해당 티켓이 없어서 환불불가
+				return -1; 													// 해당 티켓이 없어서 환불불가
 			}
 		}
-		return -2; // 구매자가 아니라서 환불 불가
+		return -2;																// 구매자가 아니라서 환불 불가
 	}
 
 	/**
