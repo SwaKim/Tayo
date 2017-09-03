@@ -267,12 +267,12 @@ public class ViewClass {
 			case "1":
 				System.out.print("취소할 티켓을 선택해주세요 : ");
 				int tiket = sc.nextInt();
-				service.refundTicket(session, tiket);
-				if (tiket == 0) {
+				int result = service.refundTicket(session, tiket);
+				if (result == 0) {
 					System.out.println("티켓이 환불되었습니다.");
-				} else if (tiket == -1) {
+				} else if (result == -1) {
 					System.out.println("해당티켓이 없습니다.");
-				} else if (tiket == -2) {
+				} else if (result == -2) {
 					System.out.println("해당티켓의 구매자가 아닙니다.");
 				}
 				break;

@@ -343,7 +343,7 @@ public class Database {
 		for (int i = 0; i < tkList.size(); i++) {
 			if (tkList.get(i).getMemId() == index) {
 				// "번호\t노선\t출발시간\t구매시간\t버스등급\t좌석"
-				toString = "┃\t"+tkList.get(i).getId() + "\t" +						// 번호
+				toString = "┃\t"+tkList.get(i).getId() + "\t" +								// 티켓 번호
 						bsList.get(tkList.get(i).getBusId()).getBsRoute() + "\t" +			// 노선
 						bsList.get(tkList.get(i).getBusId()).getBsDepartureTime() + "\t" +	// 출발시간
 						tkList.get(i).getTkBuyTime() + "\t" + 								// 구매시간
@@ -405,7 +405,7 @@ public class Database {
 	public int deleteTicket(int loginId, int ticketId) {
 		int price = 0;
 		for (int j = 0; j < mbList.size(); j++) {
-			if (mbList.get(j).getId() == loginId) {
+			if (tkList.get(j).getMemId() == loginId) {					//구매회원인지 확인
 				for (int i = 0; i < tkList.size(); i++) {
 					if (tkList.get(i).getId() == ticketId) {
 						tkList.remove(i);
