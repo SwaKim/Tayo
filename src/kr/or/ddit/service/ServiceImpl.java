@@ -8,7 +8,7 @@ import kr.or.ddit.vo.TicketVO;
 
 /**
  * @Class Name : ServiceImpl.java
- * @Description :
+ * @Description 
  * @Modification Information
  * @author 현우석, 이중우, 김수환
  * @since 2017.08.28.
@@ -28,14 +28,14 @@ public class ServiceImpl implements Service {
 
    // 회원추가
    @Override
-   public boolean joinMb(Map<String, String> member) {
+   public boolean joinMember(Map<String, String> member) {
 
       return db.createMember(member);
    }
 
    // 회원삭제
    @Override
-   public boolean delMb(int id) {
+   public boolean deleteMember(int id) {
 
       return db.deleteMember(id);
    }
@@ -47,7 +47,6 @@ public class ServiceImpl implements Service {
       return db.idCheck(menberid);
    }
 
-   // 아이디체크
    // 아이디체크
    @Override
    public int loginCheck(Map<String, String> login) {
@@ -128,13 +127,13 @@ public class ServiceImpl implements Service {
    }
 
    // 버스리스트
-   public boolean busList() {
+   public boolean showBusList() {
       // busVosize
       if (db.getListSize("bus") == 0) {
          return false;
       } else {
          for (int i = 0; i < db.getListSize("bus"); i++) {
-            System.out.println(db.getBsList(i));
+            System.out.println(db.getBusList(i));
          }
          return true;
       }
@@ -142,13 +141,13 @@ public class ServiceImpl implements Service {
 
    // 회원 맴버리스트
    @Override
-   public boolean memberList() {
+   public boolean showMemberList() {
       if (db.getListSize("member") == 0) {
          return false;
       } else {
          for (int i = 0; i < db.getListSize("member"); i++) {
 
-            System.out.println(db.getMbList(i));
+            System.out.println(db.getMemberList(i));
 
          }
 
@@ -159,7 +158,7 @@ public class ServiceImpl implements Service {
 
    // 티켓리스트
    @Override
-   public boolean ticketList(int loginid) {
+   public boolean showTicketList(int loginid) {
       if (db.getTicketListSize(loginid) == 0) {
          return false;
       } else {
@@ -175,7 +174,7 @@ public class ServiceImpl implements Service {
    
 // 관리자용티켓리스트
    @Override
-   public boolean totalTicketList() {
+   public boolean showTotalTicketList() {
          for (int i = 0; i < db.getTotalTicketList().size(); i++) {
             System.out.println(db.getTotalTicketList().get(i));
          }
@@ -186,7 +185,7 @@ public class ServiceImpl implements Service {
 
    // 총금액
    @Override
-   public int allPayMoney() {
+   public int calcTotal() {
       int money = db.allPayMoney();
       return money;
    }

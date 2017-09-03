@@ -1,6 +1,7 @@
 package kr.or.ddit.database;
 
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,48 +12,72 @@ import kr.or.ddit.vo.BusVO;
 import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.TicketVO;
 
+/**
+ * @Class Name : Database.java
+ * @Description 데이터 조회 목적
+ * @author	김수환
+ * @since 2017-08-30
+ * @version 1.1
+ * @see
+ * 
+ *<pre>
+ *		수정일			수정자		수정내용      
+ *   -------        	-------		-------------------            
+ *   2017.08.30     	김수환		List에 각VO 세팅
+ *   2017.08.31			김수환		VO는 DB에서만 관리(Private)
+ *   2017.09.01			김수환		로그인 구간 체크
+ *   2017.09.02			김수환		관리자메뉴
+ *   2017.09.03			김수환		세부메뉴 기능 구현
+ * Copyright (c) 2017 by DDIT  All right reserved
+ *</pre>
+ */
 public class Database {
+	SimpleDateFormat df = new SimpleDateFormat("MM.dd hh:mm");
+	
 	private List<MemberVO> mbList = new ArrayList<MemberVO>();
 	private List<BusVO> bsList = new ArrayList<BusVO>();
 	private List<TicketVO> tkList = new ArrayList<TicketVO>();
-	// 각 VO기본키 = id
+
 	private int mbIndex = 0;
 	private int bsIndex = 0;
 	private int tkIndex = 0;
-	SimpleDateFormat df = new SimpleDateFormat("MM.dd hh:mm");
-	
+
+	//테스트용 선기입 데이터, 실제 운용시 삭제
 	public Database() {
-		BusVO bs = new BusVO(bsIndex++, "대전-서울", "9000", df.format(new Date().getTime() + ( (long) 1000 * 60 * 60 * 0 )), new int[45], "우등");
+		BusVO bs = new BusVO(bsIndex++, "대전-서울", "9000", df.format(new Date().getTime() + ( (long)1000*60*60 * 0 )), new int[45], "우등");
 		bsList.add(bs);
-		BusVO bs1 = new BusVO(bsIndex++, "대전-서울", "5000", df.format(new Date().getTime() + ( (long) 1000 * 60 * 60 * 1 )), new int[35], "일반");
+		BusVO bs1 = new BusVO(bsIndex++, "대전-서울", "5000", df.format(new Date().getTime() + ( (long)1000*60*60 * 1 )), new int[35], "일반");
 		bsList.add(bs1);
-		BusVO bs2 = new BusVO(bsIndex++, "서울-대전", "9000", df.format(new Date().getTime() + ( (long) 1000 * 60 * 60 * 2 )), new int[45], "우등");
+		BusVO bs2 = new BusVO(bsIndex++, "서울-대전", "9000", df.format(new Date().getTime() + ( (long)1000*60*60 * 2 )), new int[45], "우등");
 		bsList.add(bs2);
-		BusVO bs3 = new BusVO(bsIndex++, "서울-대전", "5000", df.format(new Date().getTime() + ( (long) 1000 * 60 * 60 * 3 )), new int[35], "일반");
+		BusVO bs3 = new BusVO(bsIndex++, "서울-대전", "5000", df.format(new Date().getTime() + ( (long)1000*60*60 * 3 )), new int[35], "일반");
 		bsList.add(bs3);
-		BusVO bs4 = new BusVO(bsIndex++, "나주-서울", "9000", df.format(new Date().getTime() + ( (long) 1000 * 60 * 60 * 4 )), new int[45], "우등");
+		BusVO bs4 = new BusVO(bsIndex++, "나주-서울", "9000", df.format(new Date().getTime() + ( (long)1000*60*60 * 4 )), new int[45], "우등");
 		bsList.add(bs4);
-		BusVO bs5 = new BusVO(bsIndex++, "서울-나주", "5000", df.format(new Date().getTime() + ( (long) 1000 * 60 * 60 * 5 )), new int[35], "일반");
+		BusVO bs5 = new BusVO(bsIndex++, "서울-나주", "5000", df.format(new Date().getTime() + ( (long)1000*60*60 * 5 )), new int[35], "일반");
 		bsList.add(bs5);
 
 		MemberVO mb = new MemberVO(mbIndex++, true, "admin", "admin", "관리자", 100000);
 		mbList.add(mb);
 
-		TicketVO tk = new TicketVO(tkIndex++, new Date(), true, 1, 1, 21);
+		TicketVO tk = new TicketVO(tkIndex++, df.format(new Date().getTime()), true, 1, 1, 21);
 		tkList.add(tk);
-		TicketVO tk2 = new TicketVO(tkIndex++, new Date(), true, 1, 2, 20);
+		TicketVO tk2 = new TicketVO(tkIndex++, df.format(new Date().getTime() - ( (long)1000*60*60 * 1 )), true, 1, 2, 20);
 		tkList.add(tk2);
-		TicketVO tk3 = new TicketVO(tkIndex++, new Date(), true, 1, 3, 11);
+		TicketVO tk3 = new TicketVO(tkIndex++, df.format(new Date().getTime() - ( (long)1000*60*60 * 2 )), true, 1, 3, 11);
 		tkList.add(tk3);
 	}
 
 	/**
-	 * 회원DB-회원목록 관리자모드에서 사용할 회원목록 조회
-	 * 
+	 * 회원DB-회원목록 [관리자모드]
+	 * @param 회원index
 	 * @return 멤버리스트
+	 * <pre>
+	 * 관리자모드에서 사용할 회원목록, 회원index를 받아 해당회원 정보를 출력합니다.
+	 * </pre>
 	 */
-	public String getMbList(int index) {
-		String toString = mbList.get(index).getId() + "\t" + mbList.get(index).getMbUserId() + "\t"
+	public String getMemberList(int index) {
+		String toString = "┃\t"+mbList.get(index).getId() + "\t" + mbList.get(index).getMbUserId() + "\t"
 				+ mbList.get(index).getMbUserName() + "\t" + mbList.get(index).getMbUserMoney() + "\t"
 				+ mbList.get(index).isAdmin();
 		return toString;
@@ -72,7 +97,7 @@ public class Database {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * 티켓DB-관리자메뉴 티켓목록
 	 * 
@@ -93,9 +118,9 @@ public class Database {
 	 * 
 	 * @return 버스리스트
 	 */
-	public String getBsList(int index) {
+	public String getBusList(int index) {
 		// "번호\t노선\t출발시간\t버스등급\t좌석"'
-		String toString = bsList.get(index).getId() + "\t" + // 번호
+		String toString = "┃\t"+bsList.get(index).getId() + "\t" + // 번호
 				bsList.get(index).getBsRoute() + "\t" + // 노선
 				bsList.get(index).getBsDepartureTime() + "\t" + // 출발시간
 				bsList.get(index).getBsKind() + "\t" + // 버스등급
@@ -103,38 +128,39 @@ public class Database {
 				bsList.get(index).getBsSeatlist().length + "\t";// 좌석
 		return toString;
 	}
-
-	/**
-	 * 버스DB-버스좌석 회원, 관리자메뉴
-	 * 
-	 * @return 버스리스트
-	 */
+/*
 	public String getBusList(int busIndex) {
 
-		String toString = bsList.get(busIndex).getId() + "\t"
-						+ bsList.get(busIndex).getBsRoute() + "\t"
-						+ bsList.get(busIndex).getBsPrice() + "\t"
-						+ bsList.get(busIndex).getBsDepartureTime() + "\t";
+		String toString = "┃\t"+bsList.get(busIndex).getId() + "\t"
+				+ bsList.get(busIndex).getBsRoute() + "\t"
+				+ bsList.get(busIndex).getBsPrice() + "\t"
+				+ bsList.get(busIndex).getBsDepartureTime() + "\t";
 		return toString;
 	}
+*/
 	
+	/**
+	 * 티켓DB-티켓목록 관리자메뉴
+	 * 
+	 * @return 티켓리스트 여러 문자열이 담긴 Map
+	 */
 	public Map<Integer, String> getTotalTicketList() {
 		Map<Integer, String> result = new HashMap<Integer, String>();
 		for (int i = 0; i < tkList.size(); i++) {
-			String toString = tkList.get(i).getId() + "\t" +						// 번호
-				bsList.get(tkList.get(i).getBusId()).getBsRoute() + "\t" +			// 노선
-				bsList.get(tkList.get(i).getBusId()).getBsDepartureTime() + "\t" +	// 출발시간
-				tkList.get(i).getTkBuyTime() + "\t" + 								// 구매시간
-				bsList.get(tkList.get(i).getBusId()).getBsKind() + "\t" +			// 버스등급
-				tkList.get(i).getSeat() + "\t"+ 									// 좌석
-				bsList.get(tkList.get(i).getBusId()).getBsPrice() + "\t";			// 가격
+			String toString = "┃\t"+tkList.get(i).getId() + "\t" +							// 번호
+					bsList.get(tkList.get(i).getBusId()).getBsRoute() + "\t" +			// 노선
+					bsList.get(tkList.get(i).getBusId()).getBsDepartureTime() + "\t" +	// 출발시간
+					tkList.get(i).getTkBuyTime() + "\t" + 								// 구매시간
+					bsList.get(tkList.get(i).getBusId()).getBsKind() + "\t" +			// 버스등급
+					tkList.get(i).getSeat() + "\t"+ 									// 좌석
+					bsList.get(tkList.get(i).getBusId()).getBsPrice() + "\t";			// 가격
 		}
 
-		
+
 		return result;
 	}
-	
-	
+
+
 
 	/**
 	 * 회원DB-회원추가 생성된 회원객체를 DB에서 찾아, 중복된 ID가 없을시 생성수행
@@ -143,7 +169,7 @@ public class Database {
 	 * @return 결과,리스트추가
 	 */
 	public boolean createMember(Map<String, String> memberInfo) {// 중복체크는 별도의
-																	// 메서드
+		// 메서드
 		for (int i = 0; i < mbList.size(); i++) {
 			if (mbList.get(i).getMbUserId().equals(memberInfo.get("userId"))) {
 				return false;
@@ -257,17 +283,17 @@ public class Database {
 		}
 		return sum;
 	}
-	 
+
 
 	/**
-	 * 티켓DB-티켓목록 전체 티켓목록 중에서 해당 회원이 구입한 리스트를 추려내 반환
-	 * 
+	 * 티켓DB-티켓목록 회원메뉴
+	 * 전체 티켓목록 중에서 해당 회원이 구입한 리스트를 추려내 반환
 	 * @param 구매회원 인덱스
 	 * @return 투스트링
 	 */
 	public String getTkListString(int index) {
 		// "번호\t노선\t출발시간\t구매시간\t버스등급\t좌석"'
-		String toString = tkList.get(index).getId() + "\t" +							// 번호
+		String toString = "┃\t"+tkList.get(index).getId() + "\t" +							// 번호
 				bsList.get(tkList.get(index).getBusId()).getBsRoute() + "\t" +			// 노선
 				bsList.get(tkList.get(index).getBusId()).getBsDepartureTime() + "\t" +	// 출발시간
 				tkList.get(index).getTkBuyTime() + "\t" + 								// 구매시간
@@ -296,10 +322,11 @@ public class Database {
 				}// 안팔렸다!
 				TicketVO newVO = new TicketVO();
 
-				newVO.setId(bsIndex++);					// 티켓인덱스
+				newVO.setId(bsIndex++);											// 티켓인덱스
 				newVO.setMemId(Integer.parseInt(ticketInfo.get("session")));	// 구매자를 외래키를 이용하여 호출
-				newVO.setBusId(bsList.get(j).getId());	// 버스정보를 외래키를 이용하여 호출
-				tkList.add(newVO);						// 티켓목록에 새로운 티켓추가
+				newVO.setBusId(bsList.get(j).getId());							// 버스정보를 외래키를 이용하여 호출
+				newVO.setTkBuyTime(df.format(new Date()));						// 구매시간
+				tkList.add(newVO);												// 티켓목록에 새로운 티켓추가
 				for (int i = 0; i < mbList.size(); i++) {
 					if (mbList.get(i).getId() == Integer.parseInt(ticketInfo.get("session"))) {
 						if(mbList.get(i).getMbUserMoney() >= Integer.parseInt(bsList.get(j).getBsPrice())){	//현재 잔액이 결제금액보다 많으면

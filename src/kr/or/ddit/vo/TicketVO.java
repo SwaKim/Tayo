@@ -6,7 +6,7 @@ public class TicketVO{
 	//어느 VO클래스건 index의 id
 	private int id;         //기본키
 
-	private Date tkBuyTime;      //구매시간
+	private String tkBuyTime;      //구매시간
 
 	private boolean isTkUsed;   //사용여부
 
@@ -19,7 +19,7 @@ public class TicketVO{
 
 
 
-	public TicketVO(int id, Date tkBuyTime, boolean isTkUsed, int memId,
+	public TicketVO(int id, String tkBuyTime, boolean isTkUsed, int memId,
 			int busId, int seat) {
 		super();
 		this.id = id;
@@ -44,10 +44,10 @@ public class TicketVO{
 	public void setId(int mbIndex) {
 		this.id = mbIndex;
 	}
-	public Date getTkBuyTime() {
+	public String getTkBuyTime() {
 		return tkBuyTime;
 	}
-	public void setTkBuyTime(Date tkBuyTime) {
+	public void setTkBuyTime(String tkBuyTime) {
 		this.tkBuyTime = tkBuyTime;
 	}
 	public boolean isTkUsed() {

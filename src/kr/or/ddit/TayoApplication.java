@@ -22,6 +22,6 @@ package kr.or.ddit;
 public class TayoApplication {
 	public static void main(String[] args) {
 		ViewClass vc = new ViewClass();
-		vc.startMethod();
+		vc.startMenu();
 	}
 }

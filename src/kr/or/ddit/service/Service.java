@@ -9,7 +9,7 @@ import kr.or.ddit.vo.TicketVO;
 
 /**
  * @Class Name : Service.java
- * @Description :
+ * @Description 
  * @Modification Information
  * @author 현우석, 이중우, 김수환
  * @since 2017.08.28.
@@ -31,7 +31,7 @@ public interface Service {// 대략적인 기능
     * @param Map<s,s> member
     * @return boolean
     */
-   public boolean joinMb(Map<String, String> member);
+   public boolean joinMember(Map<String, String> member);
 
    /**
     * 회원 삭제 List에서 id와 일치하는 것을 찾아 remove해준다.
@@ -39,21 +39,21 @@ public interface Service {// 대략적인 기능
     * @param id
     * @return boolean
     */
-   public boolean delMb(int id);
+   public boolean deleteMember(int id);
 
    /**
     * 관리자:회원리스트
     * 
     * @return boolean
     */
-   public boolean memberList();
+   public boolean showMemberList();
 
    /**
     * 관리자:버스리스트
     * 관리자페이지에서 버스 리스트를 보여준다. 
     * @return boolean
     */
-   public boolean busList();
+   public boolean showBusList();
 
    /**
     * 회원가입
@@ -92,7 +92,7 @@ public interface Service {// 대략적인 기능
     * @param 로그인된  회원의 인덱스값
     * @return boolean
     */
-   public boolean ticketList(int loginid);
+   public boolean showTicketList(int loginid);
 
    /**
     * 충전 
@@ -127,9 +127,9 @@ public interface Service {// 대략적인 기능
     * @param
     * @return
     */
-   public int allPayMoney();
+   public int calcTotal();
 
-   boolean totalTicketList();
+   boolean showTotalTicketList();
 
    
 

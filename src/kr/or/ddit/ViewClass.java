@@ -11,416 +11,486 @@ import kr.or.ddit.service.ServiceImpl;
 
 /**
  * @Class Name : ViewClass.java
- * @Description 고속버스 예매 시스템
- * @author
- * @since 2017-08-31
+ * @Description 콘솔 화면에 보여지는 프론트엔드 입출력을 담당
+ * @author	이중우
+ * @since 2017-08-30
  * @version 0.1
  * @see
  * 
- *      <pre>
- *   수정일         수정자      수정내용      
- *   -------         -------      -------------------            
- *   2017.08.31      이중우      메인메뉴 시작
- * </pre>
- * 
- *      <pre>
- *  해야할것
- *    : 프로토타이핑툴
+ *<pre>
+ *		수정일			수정자		수정내용      
+ *   -------        	-------		-------------------            
+ *	2017.08.30			이중우		메인메뉴 시작
+ *	2017.08.31			이중우		회원메뉴 작성
+ *	2017.09.01			이중우		로그인 구간 체크
+ *	2017.09.02			이중우		관리자메뉴
+ *	2017.09.03			이중우		세부메뉴 기능 구현
+ *Copyright (c) 2017 by DDIT  All right reserved
  * </pre>
  */
 public class ViewClass {
-   Pattern p = Pattern.compile("^[0-9a-z-A-Z]+$"); // 아이디 비번 확인용
-   Pattern p2 = Pattern.compile("^[가-힣a-zA-Z]+$"); // 이름 확인용 정규식
-   Pattern p3 = Pattern.compile("^[1-3]+$"); // 버스 시간 선택용
+	Pattern p = Pattern.compile("^[0-9a-z-A-Z]+$");								// 아이디 비번 확인용
+	Pattern p2 = Pattern.compile("^[가-힣a-zA-Z]+$");								// 이름 확인용 정규식
 
-   private Service service = new ServiceImpl();
-   Scanner sc = new Scanner(System.in);
+	private Service service = new ServiceImpl();
+	Scanner sc = new Scanner(System.in);
 
-   int session = -1;// 로그인 안된상태
+	int session = -1;															// 로그인 상태. -1 = 비회원
 
-   // 정규식은 뷰에서 !!!!!!
-   // 메인메뉴
-   void startMethod() {
-      while (true) {
-         System.out.println("타요 버스에 오신것을 환영합니다.");
-         System.out.println("1 : 로그인");
-         System.out.println("2 : 회원가입");
-         System.out.println("원하는 메뉴의 숫자를 입력하세요 ");
-         String input = sc.next();
+	// 메인메뉴
+	void startMenu() {
+		while (true) {
+		    clear();															//화면정리
+			System.out.println("┏━━━━타요 버스에 오신것을 환영합니다.━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+			System.out.println("┃");
+			System.out.println("┃\t1 : 로그인");
+			System.out.println("┃\t2 : 회원가입");
+			System.out.println("┃");
+			System.out.print("┗━━━━━━━━원하는 메뉴의 숫자를 입력하세요 : ");
+			String input = sc.next();
+			switch (input) {
+			case "1":
+			case "로그인":
+				login();
+				break;
+			case "2":
+			case "회원가입":
+				join();
+				break;
+			default:
+				System.out.println("잘못된 입력입니다.");
+				continue;
+			}
+		}
+	}
 
-         switch (input) {
-         case "1":
-         case "로그인":
-            login();
-            break;
-         case "2":
-         case "회원가입":
-            joinMenu();
-            break;
-         default:
-            System.out.println("잘못된 입력입니다.");
-            continue;
-         }
-      }
-   }
+	//회원가입
+	public void join() {
+		Map<String, String> join = new HashMap<String, String>();				//입력은 맵타입으로 담아 인자값으로 전달
 
-   public void joinMenu() {
-      Map<String, String> join = new HashMap<String, String>();
+	    clear();																//화면정리
+		System.out.println("┏━━━━회원가입━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+		String userId;
 
-      System.out.println("=== 회원가입");
-      String userId;
+		do {
+			System.out.println("┃\t");
+			System.out.print("┣━━━━아이디 : ");
+			userId = sc.next();
+			Matcher m1 = p.matcher(userId);
 
-      do {
-         System.out.print("아이디 : ");
-         userId = sc.next();
-         Matcher m1 = p.matcher(userId);
+			if (m1.find()) {
+				if (!service.checkJoinId(userId)) {								// 아이디 중복일때
+					System.out.print("┃\tid중복입니다. 다시 아이디를 입력해주세요\n┃\t아이디 : ");
+					userId = sc.next();
+				} else {
+					join.put("userId", userId);// true;
+					break;
+				}
+			} else {
+				System.out.println("┃\t잘못된 문자를 입력하셨습니다.");
+			}
 
-         if (m1.find()) {
-            if (!service.checkJoinId(userId)) { // 아이디 중복일때
-               System.out.print("id중복입니다. 다시 아이디를 입력해주세요\n아이디 : ");
-               userId = sc.next();
-            } else {
-               join.put("userId", userId);// true;
-               break;
-            }
-         } else {
-            System.out.println("잘못된 문자를 입력하셨습니다.");
-         }
+		} while (true);
 
-      } while (true);
+		// 비밀번호 입력구간 시작
+		String userPw;
+		String userPwChk = null;
+		boolean pCheck = true;													// 비밀번호 중복체크			
+		do {
+			System.out.println("┃\t");
+			System.out.print("┣━━━━비밀번호 : ");
+			userPw = sc.next();
+			Matcher m2 = p.matcher(userPw);
 
-      // 비밀번호 입력구간 시작
-      String userPw;
-      String userPwChk = null;
-      boolean pCheck = true;
-      do {
-         System.out.print("비밀번호 : ");
-         userPw = sc.next();
-         Matcher m2 = p.matcher(userPw);
+			if (m2.find()) {
+				System.out.println("┃");
+				System.out.print("┣━━━━암호확인 : ");
+				userPwChk = sc.next();
+			} else {
+				System.out.println("┃\t잘못된 문자를 입력하셨습니다.");
+			}
+			pCheck = !userPw.equals(userPwChk);
 
-         if (m2.find()) {
-            System.out.print("암호확인 : ");
-            userPwChk = sc.next();
-         } else {
-            System.out.println("잘못된 문자를 입력하셨습니다.");
-         }
-         pCheck = !userPw.equals(userPwChk);
+		} while (pCheck);
+		join.put("userPw", userPw);
+		// 비밀번호 입력구간 끝
 
-      } while (pCheck);
-      join.put("userPw", userPw);
-      // 비밀번호 입력구간 끝
+		System.out.println("┃");
+		System.out.print("┗━━━━이름 : ");
+		String name = sc.next();
+		Matcher m3 = p2.matcher(name);
 
-      System.out.print("이름 : ");
-      String name = sc.next();
-      Matcher m3 = p2.matcher(name);
+		if (m3.find()) {														// 입력한 id가 정규식에 맞을경우 중복확인
+			join.put("userName", name);
+		} else {
+			System.out.println("잘못된 문자를 입력하셨습니다.");
+		}
 
-      if (m3.find()) { // 입력한 id가 정규식에 맞을경우 중복확인
-         join.put("userName", name);
-      } else {
-         System.out.println("잘못된 문자를 입력하셨습니다.");
-      }
+		boolean joinMenu = service.joinMember(join);
 
-      boolean joinMenu = service.joinMb(join);
+		if (joinMenu) {
+			System.out.println("회원가입이 완료되었습니다. 환영합니다.");
+		} else {
+			System.out.println("입력내용을 다시 한번 확인해 주세요.");
+		}
 
-      if (joinMenu) {
-         System.out.println("회원가입을 환영합니다.");
-      } else {
-         System.out.println("다시한번 확인해 주세요.");
-      }
+	}
 
-   }
 
-   /*
-    * // 관리자용 회원목록보기 public void memberList() {
-    * System.out.println("회원목록을 표시합니다.");
-    * System.out.println(service.memberList()); // 무조건 관리자
-    * 
-    * }
-    */
+	// 로그인메뉴
+	public void login() {
+		Map<String, String> login = new HashMap<String, String>();
 
-   // 로그인메뉴
-   public void login() {
-      Map<String, String> login = new HashMap<String, String>();
+	    clear();																//화면정리
+		System.out.println("┏━━━━어서오세요. 아이디를 입력해주세요 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+		System.out.println("┃");
+		System.out.print("┣━━━━아이디 :");
+		String userId = sc.next();
+		System.out.println("┃");
 
-      System.out.println("환영합니다.");
-      System.out.print("아이디 :");
-      String userId = sc.next();
+		Matcher m1 = p.matcher(userId);
 
-      Matcher m1 = p.matcher(userId);
+		if (m1.find()) {
+			login.put("userId", userId);
+		}
 
-      if (m1.find()) {
-         login.put("userId", userId);
-      }
+		System.out.print("┗━━━━비밀번호 : ");
+		String userPw = sc.next();
 
-      System.out.print("비번 : ");
-      String userPw = sc.next();
+		Matcher m2 = p.matcher(userPw);
 
-      Matcher m2 = p.matcher(userPw);
+		if (m2.find()) {
+			login.put("userPw", userPw);
+		}
 
-      if (m2.find()) {
-         login.put("userPw", userPw);
-      }
+		session = service.loginCheck(login);
+		if (session == -3) {
+			System.out.println("없는 아이디입니다.");
+		} else if (session == -1) {
+			System.out.println("비밀번호가 틀렸습니다.");
+		} else if (session == -2) {
+			adminMenu();														// 관리자메뉴
+		} else {
+			memberMenu();														// 회원메뉴
+		}
+	}
 
-      session = service.loginCheck(login);
-      if (session == -3) {
-         System.out.println("없는 아이디입니다.");
-      } else if (session == -1) {
-         System.out.println("비밀번호가 틀렸습니다.");
-      } else if (session == -2) {
-         adminMenu(); // 관리자메뉴
-      } else {
-         memberMenu(); // 회원메뉴
-      }
-   }
+	// 회원메뉴
+	public void memberMenu() {
+		while (true) {
+		    clear();															//화면정리
+			System.out.println("┏━━━━회원메뉴━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+			System.out.println("┃");
+			System.out.println("┃\t1 : 버스 예매하기");
+			System.out.println("┃\t2 : 구매 티켓 확인");
+			System.out.println("┃\t3 : 포인트 충전");
+			System.out.println("┃\t4 : 로그아웃");
+			System.out.println("┃\t");
+			System.out.print("┗━━━━━━━━원하는 메뉴를 입력하세요 : ");
+			String input = sc.next();
 
-   // 회원메뉴
-   public void memberMenu() {
-      while (true) {
-         System.out.println("=== 회원메뉴");
-         System.out.println("1 : 버스 예매하기");
-         System.out.println("2 : 예매확인 및 취소");
-         System.out.println("3 : 충전/잔고");
-         System.out.println("4 : 로그아웃");
-         System.out.println("원하는 메뉴를 입력하세요 ");
-         String input = sc.next();
+			switch (input) {
+			case "1":
+				ticketing();													// 버스예매
+				break;
+			case "2":
+				confirmTicket();													// 구매 티켓 확인
+				break;
+			case "3":
+				chargeMoney();													// 충전
+				break;
+			case "4":
+				return;
 
-         switch (input) {
-         case "1":
-            ticketing(); // 버스예매
-            break;
-         case "2":
-            confirmBus(); // 예매확인 및 취소
-            break;
-         case "3":
-            chargeMoney(); // 충전/잔고 이동
-            break;
-         case "4":
-            return;
+			default:
+				System.out.println("잘못된 입력입니다.");
+				continue;
+			}
+		}
+	}
 
-         default:
-            System.out.println("잘못된 입력입니다.");
-            continue;
-         }
-      }
-   }
+	// 버스예매하기
+	public void ticketing() {
+		Map<String, String> temp = new HashMap<String, String>();
 
-   // 버스예매하기
-   public void ticketing() {
-      Map<String, String> temp = new HashMap<String, String>();
+	    clear();																//화면정리
+		System.out.println("┏━━━━버스예매━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+		System.out.println("┃");
+		System.out.println("┃\t번호\t노선\t출발시간\t\t버스등급\t가격\t좌석");
+		service.showBusList();
+		
+		System.out.println("┃\t");
+		System.out.println("┣━━━━목적지 선택");
+		System.out.print("노선에 해당하는 번호를 선택해 주세요.");
+		String bsRoute = sc.next();
 
-      System.out.println("=== 버스예매");
-      System.out.println("노선정보");
-      System.out.println("번호\t노선\t출발시간\t\t버스등급\t가격\t좌석");
-      service.busList();
+		System.out.println("┗━━━━좌석 선택");
+		String seat = sc.next();
 
-      System.out.println("=== 목적지 선택");
-      System.out.print("노선에 해당하는 번호를 선택해 주세요.");
-      String bsRoute = sc.next();
+		temp.put("session", String.valueOf(session));
+		temp.put("seat", seat);
+		temp.put("bsRoute", bsRoute);
 
-      System.out.println("=== 좌석 선택");
-      String seat = sc.next();
+		int payCheck = service.payBusTicket(temp);
 
-      temp.put("session", String.valueOf(session));
-      temp.put("seat", seat);
-      temp.put("bsRoute", bsRoute);
+		if (payCheck == -1) {
+			System.out.println("해당 노선이 존재하지 않습니다");
+		} else if (payCheck == -2) {
+			System.out.println("좌석이 이미 판매되었습니다.");
+		} else if (payCheck == -3) {
+			System.out.println("잔액이 부족합니다.");
+		} else {
+			System.out.println("결제가 완료되었습니다.");
+		}
 
-      int payCheck = service.payBusTicket(temp);
+	}
 
-      if (payCheck == -1) {
-         System.out.println("해당 노선이 존재하지 않습니다");
-      } else if (payCheck == -2) {
-         System.out.println("좌석이 이미 판매되었습니다.");
-      } else if (payCheck == -3) {
-         System.out.println("잔액이 부족합니다.");
-      } else {
-         System.out.println("결제가 완료되었습니다.");
-      }
+	// 구매티켓확인
+	public void confirmTicket() {
+		while (true) {
+		    clear();															//화면정리
+			System.out.println("┏━━━━예매확인 및 취소 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+			System.out.println("┃");
+			System.out.println("┃\t번호\t노선\t출발시간\t\t구매시간\t\t버스등급\t좌석\t가격");
+			service.showTicketList(session);									//로그인한 회원의 구매목록 출력
+			System.out.println("┃");
+			System.out.println("┣━━━━메뉴");
+			System.out.println("┃\t");
+			System.out.println("┃\t1 : 티켓 취소하기");
+			System.out.println("┃\t2 : 뒤로가기");
+			System.out.println("┃\t");
+			System.out.print("┗━━━━━━━━원하는 메뉴를 입력하세요 : ");
+			String input = sc.next();
 
-   }
+			switch (input) {
+			case "1":
+				System.out.print("취소할 티켓을 선택해주세요 : ");
+				int tiket = sc.nextInt();
+				service.refundTicket(session, tiket);
+				if (tiket == 0) {
+					System.out.println("티켓이 환불되었습니다.");
+				} else if (tiket == -1) {
+					System.out.println("해당티켓이 없습니다.");
+				} else if (tiket == -2) {
+					System.out.println("해당티켓의 구매자가 아닙니다.");
+				}
+				break;
+			case "2":
+				return;
+			default:
+				System.out.println("잘못된 입력입니다.");
+				continue;
+			}
+		}
+	}
 
-   // 예매확인 및 취소
-   public void confirmBus() {
-      System.out.println("=== 예매확인 및 취소");
-      System.out.println("번호\t노선\t출발시간\t\t구매시간\t\t버스등급\t좌석\t가격");
-      service.ticketList(session); // ? ? 볼수가 없다.
-      System.out.print("취소할 티켓을 선택해주세요 : ");
-      int tiket = sc.nextInt();
-      service.refundTicket(session, tiket);
-      if (tiket == 0) {
-         System.out.println("티켓이 환불되었습니다.");
-      } else if (tiket == -1) {
-         System.out.println("해당티켓이 없습니다.");
-      } else if (tiket == -2) {
-         System.out.println("해당티켓의 구매자가 아닙니다.");
-      }
-   }
+	// 포인트충전
+	public void chargeMoney() {
+	    clear();																//화면정리
+		System.out.println("┏━━━━포인트 충전━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+		System.out.println("┃");
+		System.out.print("┗━━━━선불 결제할 금액을 입력해 주세요 : ");
+		int money = 0;
+		while (money<=0) {														//양수만 입력 가능. 인출불가
+			try {
+				money = sc.nextInt();
+			} catch (Exception e) {
+				System.out.println("너무 과분한 돈입니다.");
+			}
+			if (money<=0) {
+				System.out.println("다시 입력해주세요. 인출은 고객센터로 문의바랍니다.");
+			}
+		}
+		int currentMoney = service.chargeMoney(session, money);					//현재 잔액
+		System.out.println("고객님께서 현재 보유하신 금액은 "+currentMoney+"원 입니다.");
 
-   // 충전,잔고
-   public void chargeMoney() {
-      System.out.println("=== 충전/잔고");
-      System.out.print("충전하실 금액을 입력해 주세요 : ");
-      int money = 0;
-      try {
-         money = sc.nextInt();
-      } catch (Exception e) {
-         System.out.println("너무 과분한 돈입니다.");
-      }
-      System.out.println("=== 잔고");
-      int money2 = service.chargeMoney(session, money);
-      System.out.println(money2);
+	}
 
-   }
+	// 관리자메뉴
+	public void adminMenu() {
+		while (true) {
+		    clear();															//화면정리
+			System.out.println("┏━━━━어서오세요 관리자님  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+			System.out.println("┃");
+			System.out.println("┃\t1 : 회원관리");
+			System.out.println("┃\t2 : 노선관리");
+			System.out.println("┃\t3 : 정산");
+			System.out.println("┃\t4 : 로그아웃");
+			System.out.println("┃\t");
+			System.out.print("┗━━━━━━━━원하는 메뉴를 입력하세요 : ");
+			String input = sc.next();
 
-   // 관리자메뉴
-   public void adminMenu() {
-      while (true) {
-         // System.out.println("현우석");
-         System.out.println("1 : 회원관리");
-         System.out.println("2 : 노선관리");
-         System.out.println("3 : 정산");
-         System.out.println("4 : 로그아웃");
-         System.out.println("원하는 메뉴를 입력하세요 : ");
-         String input = sc.next();
+			switch (input) {
+			case "1":
+				manageMember();													// 회원관리 이동
+				break;
+			case "2":
+				manageRoute();													// 노선관리 이동
+				break;
+			case "3":
+				calc();															// 정산 이동
+				break;
+			case "4":
+				return;
+			default:
+				System.out.println("잘못된 입력입니다.");
+				break;
+			}
+		}
 
-         switch (input) {
-         case "1":
-            managementUser(); // 회원관리 이동
-            break;
-         case "2":
-            managementRoute(); // 노선관리 이동
-            break;
-         case "3":
-            calc(); // 정산 이동
-            break;
-         case "4":
-            return;
+	}
 
-         default:
-            System.out.println("잘못된 입력입니다.");
-            break;
-         }
-      }
+	// 회원관리
+	public void manageMember() {
+	    clear();																//화면정리
+		System.out.println("┏━━━━회원관리━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+		System.out.println("┃");
+		System.out.println("┃\t번호\tID\t이름\t잔고\t관리자");
+		service.showMemberList();
+		System.out.println("┃");
+		System.out.print("┗━━━━삭제할 회원의 번호를 입력하세요 : ");
+		int delUserIndex = 0;
 
-   }
+		try {
+			delUserIndex = sc.nextInt();
+		} catch (Exception e) {
+			System.out.println("숫자만 입력해 주세요.");
+		}
+		boolean UserCheck = service.deleteMember(delUserIndex);
 
-   // 회원관리
-   public void managementUser() {
-      System.out.println("=== 회원관리");
-      System.out.println("번호\tID\t이름\t잔고\t관리자");
-      service.memberList();
-      System.out.println("삭제할 회원의 번호를 입력하세요 : ");
-      int delUserIndex = 0;
+		if (UserCheck) {
+			System.out.println("삭제에 성공하셨습니다.");
+		} else {
+			System.out.println("다시한번 확인해 주세요.");
+		}
+	}
 
-      try {
-         delUserIndex = sc.nextInt();
-      } catch (Exception e) {
-         System.out.println("숫자만 입력해 주세요.");
-      }
-      boolean UserCheck = service.delMb(delUserIndex);
+	//노선관리메뉴
+	public void manageRoute() {
+		while (true) {
+		    clear();															//화면정리
+			System.out.println("┏━━━━노선관리━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+			System.out.println("┃");
+			System.out.println("┃\t번호\t노선\t출발시간\t\t버스등급\t가격\t좌석");
+			service.showBusList();
+			System.out.println("┃");
+			System.out.println("┣━━━━메뉴");
+			System.out.println("┃");
+			System.out.println("┃\t1 : 노선추가");
+			System.out.println("┃\t2 : 노선삭제");
+			System.out.println("┃\t3 : 노선변경");
+			System.out.println("┃\t4 : 이전메뉴");
+			System.out.println("┃");
+			System.out.print("┗━━━━━━━━원하는 메뉴를 입력하세요 : ");
 
-      if (UserCheck) {
-         System.out.println("삭제에 성공하셨습니다.");
-      } else {
-         System.out.println("다시한번 확인해 주세요.");
-      }
-   }
+			String input = sc.next();
+			switch (input) {
+			case "1":
+				addBus("추가"); // 노선추가
+				break;
+			case "2":
+				removeBus("삭제"); // 노선삭제
+				break;
+			case "3":
+				reBus(); // 노선변경
+				break;
+			case "4":
+				return;
 
-   public void managementRoute() {
-      while (true) {
-         System.out.println("=== 노선관리");
-         System.out.println("번호\t노선\t출발시간\t\t버스등급\t가격\t좌석");
-         service.busList();
-         System.out
-               .println("==============================================");
-         System.out.println("1 : 노선추가");
-         System.out.println("2 : 노선삭제");
-         System.out.println("3 : 노선변경");
-         System.out.println("4 : 이전메뉴");
-         System.out.println("원하는 메뉴를 입력하세요 : ");
+			default:
+				System.out.println("잘못된 입력입니다.");
+				continue;
+			}
+		}
+	}
 
-         String input = sc.next();
-         switch (input) {
-         case "1":
-            addBus("추가"); // 노선추가
-            break;
-         case "2":
-            delBus("삭제"); // 노선삭제
-            break;
-         case "3":
-            reBus(); // 노선변경
-            break;
-         case "4":
-            return;
+	//버스 추가-변경
+	public void addBus(String methodKind) {										//코드 재사용. 매개변수로 추가-변경 
+		Map<String, String> temp = new HashMap<String, String>();
 
-         default:
-            System.out.println("잘못된 입력입니다.");
-            continue;
-         }
-      }
-   }
+	    clear();																//화면정리
+		System.out.println("┏━━━━노선" + methodKind+"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+		System.out.println("┃");
+		System.out.print("┣━━━━새로 운행할 노선을 입력해주세요 [출발지-도착지] : ");
+		String bsRoute = sc.next();
+		System.out.println("┃");
+		System.out.print("┣━━━━가격을 입력해주세요 : ");
+		String bsPrice = sc.next();
+		System.out.println("┃");
+		System.out.print("┣━━━━버스의 종류를 입력해주세요 : ");
+		String bsKind = sc.next();
+		System.out.println("┃");
+		System.out.print("┗━━━━운행 횟수를 입력해주세요 : ");
+		String numberOfService = sc.next();
 
-   public void addBus(String method) {
-      Map<String, String> temp = new HashMap<String, String>();
+		temp.put("bsRoute", bsRoute);
+		temp.put("bsPrice", bsPrice);
+		temp.put("bsKind", bsKind);
+		temp.put("numberService", numberOfService);
 
-      System.out.println("=== 노선" + method);
-      System.out.print(method + "노선을 입력해주세요 [출발지-도착지] : ");
-      String bsRoute = sc.next();
-      System.out.print("가격을 입력해주세요 : ");
-      String bsPrice = sc.next();
-      System.out.print("종류를 입력해주세요 : ");
-      String bsKind = sc.next();
-      System.out.print("운행 횟수를 입력해주세요 : ");
-      String numberService = sc.next();
+		boolean busCheck = service.addBus(temp);
 
-      temp.put("bsRoute", bsRoute);
-      temp.put("bsPrice", bsPrice);
-      temp.put("bsKind", bsKind);
-      temp.put("numberService", numberService);
+		if (busCheck) {
+			System.out.println(methodKind +" 되었습니다.");
+		} else {
+			System.out.println("다시한번 확인해 주세요.");
+		}
+	}
 
-      boolean busCheck = service.addBus(temp);
+	//버스 삭제-변경
+	public void removeBus(String methodKind) {									//코드 재사용. 매개변수로 삭제-변경 
+	    clear();																//화면정리
+		System.out.println("┏━━━━노선"+methodKind+"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+		System.out.println("┃");
+		System.out.println("┃\t번호\t노선\t출발시간\t\t버스등급\t가격\t좌석");
+		service.showBusList();
+		System.out.println("┃");
+		System.out.println("┗━━━━"+methodKind + "할 노선의 번호를 입력해주세요");
+		int removeBusIndex = 0;
 
-      if (busCheck) {
-         System.out.println(method + " 성공하셨습니다.");
-      } else {
-         System.out.println("다시한번 확인해 주세요.");
-      }
-   }
+		try {
+			removeBusIndex = sc.nextInt();
+		} catch (Exception e) {
+			System.out.println("숫자만 입력해 주세요.");
+		}
 
-   public void delBus(String method) {
-      System.out.println("=== 노선삭제");
-      System.out.println("번호\t노선\t출발시간\t\t버스등급\t가격\t좌석");
-      service.busList();
-      System.out.println("==============================================");
-      System.out.println(method + "할 노선을 선택해주세요");
-      int removeBusIndex = 0;
+		boolean busCheck = service.removeBus(removeBusIndex);
 
-      try {
-         removeBusIndex = sc.nextInt();
-      } catch (Exception e) {
-         System.out.println("숫자만 입력해 주세요.");
-      }
-
-      boolean busCheck = service.removeBus(removeBusIndex);
-
-      if (busCheck) {
-         System.out.println(method + " 성공하셨습니다.");
-      } else {
-         System.out.println("다시한번 확인해 주세요.");
-      }
-   }
-
-   public void reBus() {
-      System.out.println("=== 노선변경");
-      delBus("삭제"); // 노선삭제
-      addBus("변경"); // 노선추가
-   }
-
-    public void calc() {
-         System.out.println("=== 정산");
-         System.out.println("번호\t노선\t출발시간\t\t구매시간\t\t버스등급\t좌석\t가격");
-         service.totalTicketList();
-         int sum = service.allPayMoney();   // 타입이든 뭐든 수정해야해요 !!
-         System.out.println("\t\t\t\t\t\t\t\t"+service.allPayMoney());
-      }
+		if (busCheck) {
+			System.out.println(methodKind+"되었하셨습니다.");
+		} else {
+			System.out.println("다시한번 확인해 주세요.");
+		}
+	}
+	
+	//버스 변경
+	public void reBus() {
+		removeBus("변경");														// 노선삭제
+		addBus("변경");															// 노선추가
+	}
+	
+	//정산
+	public void calc() {
+	    clear();																//화면정리
+		System.out.println("┏━━━━ 정산   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+		System.out.println("┃");
+		System.out.println("┃\t번호\t노선\t출발시간\t\t구매시간\t\t버스등급\t좌석\t가격");
+		service.showTotalTicketList();											//왜 안나오는지 모르겠네
+		int sum = service.calcTotal();											//티켓 총 판매금액
+		System.out.println("┃");
+		System.out.println("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\t합계\t"+service.calcTotal()+"원");
+	}
+	
+	/**
+	 * 회원DB-회원목록 [관리자모드]
+	 * @param 회원index
+	 * @return 멤버리스트
+	 * <pre>
+	 * 관리자모드에서 사용할 회원목록, 회원index를 받아 해당회원 정보를 출력합니다.
+	 * </pre>
+	 */
+	public void clear(){
+		for (int i = 0; i < 2; i++)	System.out.println("");   
+	}
 
 }
