@@ -25,6 +25,7 @@ import kr.or.ddit.service.ServiceImpl;
  *	2017.09.01			이중우		로그인 구간 체크
  *	2017.09.02			이중우		관리자메뉴
  *	2017.09.03			이중우		세부메뉴 기능 구현
+ *	2017.09.04			김수환		노가다
  *Copyright (c) 2017 by DDIT  All right reserved
  * </pre>
  */
@@ -474,7 +475,7 @@ public class ViewClass {
 	    clear();																//화면정리
 		System.out.println("┏━━━━ 정산   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
 		System.out.println("┃");
-		System.out.println("┃\t번호\t노선\t출발시간\t\t구매시간\t\t버스등급\t좌석\t가격");
+		System.out.println("┃\t번호\t노선\t출발시간\t\t구매시간\t\t버스등급\t좌석\t가격\t구매자");
 		service.showTotalTicketList();											//왜 안나오는지 모르겠네
 		int sum = service.calcTotal();											//티켓 총 판매금액
 		System.out.println("┃");

@@ -59,22 +59,30 @@ public class Database {
 
 		MemberVO mb = new MemberVO(mbIndex++, true, "admin", "admin", "관리자", 100000);
 		mbList.add(mb);
-
-		TicketVO tk = new TicketVO(tkIndex++, df.format(new Date().getTime()), true, 1, 1, 21);
+		
+		//관리자가 구매한 티켓
+		TicketVO tk = new TicketVO(tkIndex++, df.format(new Date().getTime()), true, 0, 1, 21);
 		tkList.add(tk);
-		TicketVO tk2 = new TicketVO(tkIndex++, df.format(new Date().getTime() - ( (long)1000*60*60 * 1 )), true, 1, 2, 20);
+		TicketVO tk2 = new TicketVO(tkIndex++, df.format(new Date().getTime() - ( (long)1000*60*60 * 1 )), true, 0, 2, 20);
 		tkList.add(tk2);
-		TicketVO tk3 = new TicketVO(tkIndex++, df.format(new Date().getTime() - ( (long)1000*60*60 * 2 )), true, 1, 3, 11);
+		TicketVO tk3 = new TicketVO(tkIndex++, df.format(new Date().getTime() - ( (long)1000*60*60 * 2 )), true, 0, 3, 11);
 		tkList.add(tk3);
+		
+		//테스트로 회원가입시 해당 회원이 보유한 티켓
+		TicketVO tk4 = new TicketVO(tkIndex++, df.format(new Date().getTime() - ( (long)1000*60*60 * 3 )), true, 1, 3, 13);
+		tkList.add(tk4);
+		TicketVO tk5 = new TicketVO(tkIndex++, df.format(new Date().getTime() - ( (long)1000*60*60 * 4 )), true, 1, 4, 32);
+		tkList.add(tk5);
+		TicketVO tk6 = new TicketVO(tkIndex++, df.format(new Date().getTime() - ( (long)1000*60*60 * 5 )), true, 1, 2, 27);
+		tkList.add(tk6);
 	}
 
 	/**
 	 * 회원DB-회원목록 [관리자모드]
+	 *	관리자모드에서 사용할 회원목록, 회원index를 받아 해당회원 정보를 출력합니다.
+	 * 
 	 * @param 회원index
 	 * @return 멤버리스트
-	 * <pre>
-	 * 관리자모드에서 사용할 회원목록, 회원index를 받아 해당회원 정보를 출력합니다.
-	 * </pre>
 	 */
 	public String getMemberList(int index) {
 		String toString = "┃\t"+mbList.get(index).getId() + "\t" + mbList.get(index).getMbUserId() + "\t"
@@ -84,9 +92,11 @@ public class Database {
 	}
 
 	/**
-	 * 버스,멤버DB-목록 회원, 관리자메뉴
-	 * 
-	 * @return 버스리스트
+	 * 버스,멤버DB-목록
+	 *	회원, 관리자메뉴
+	 *
+	 * @param 멤버/목록
+	 * @return 리스트
 	 */
 	public int getListSize(String kind) {
 		switch (kind) {
@@ -101,7 +111,7 @@ public class Database {
 	/**
 	 * 티켓DB-관리자메뉴 티켓목록
 	 * 
-	 * @return 버스리스트
+	 * @return 티켓리스트
 	 */
 	public int getTicketListSize(int buyId) {
 		int size = 0;
@@ -120,12 +130,12 @@ public class Database {
 	 */
 	public String getBusList(int index) {
 		// "번호\t노선\t출발시간\t버스등급\t좌석"'
-		String toString = "┃\t"+bsList.get(index).getId() + "\t" + // 번호
-				bsList.get(index).getBsRoute() + "\t" + // 노선
+		String toString = "┃\t"+bsList.get(index).getId() + "\t" + 						// 번호
+				bsList.get(index).getBsRoute() + "\t" + 								// 노선
 				bsList.get(index).getBsDepartureTime() + "\t" + // 출발시간
-				bsList.get(index).getBsKind() + "\t" + // 버스등급
-				bsList.get(index).getBsPrice() + "\t" + // 가격
-				bsList.get(index).getBsSeatlist().length + "\t";// 좌석
+				bsList.get(index).getBsKind() + "\t" + 									// 버스등급
+				bsList.get(index).getBsPrice() + "\t" + 								// 가격
+				bsList.get(index).getBsSeatlist().length + "\t";						// 좌석
 		return toString;
 	}
 /*
@@ -142,18 +152,24 @@ public class Database {
 	/**
 	 * 티켓DB-티켓목록 관리자메뉴
 	 * 
-	 * @return 티켓리스트 여러 문자열이 담긴 Map
+	 * @return Map 여러 문자열로 구성된 티켓리스트
 	 */
 	public Map<Integer, String> getTotalTicketList() {
 		Map<Integer, String> result = new HashMap<Integer, String>();
 		for (int i = 0; i < tkList.size(); i++) {
-			String toString = "┃\t"+tkList.get(i).getId() + "\t" +							// 번호
+			String toString = "┃\t"+tkList.get(i).getId() + "\t" +						// 번호
 					bsList.get(tkList.get(i).getBusId()).getBsRoute() + "\t" +			// 노선
 					bsList.get(tkList.get(i).getBusId()).getBsDepartureTime() + "\t" +	// 출발시간
 					tkList.get(i).getTkBuyTime() + "\t" + 								// 구매시간
 					bsList.get(tkList.get(i).getBusId()).getBsKind() + "\t" +			// 버스등급
 					tkList.get(i).getSeat() + "\t"+ 									// 좌석
 					bsList.get(tkList.get(i).getBusId()).getBsPrice() + "\t";			// 가격
+					try {
+						toString += mbList.get(tkList.get(i).getMemId()).getMbUserName();	// 구매회원
+						result.put(i, toString);
+					} catch (Exception e) {
+						result.put(i, toString);
+					};
 		}
 
 
@@ -166,10 +182,9 @@ public class Database {
 	 * 회원DB-회원추가 생성된 회원객체를 DB에서 찾아, 중복된 ID가 없을시 생성수행
 	 * 
 	 * @param 회원VO
-	 * @return 결과,리스트추가
+	 * @return boolean 결과,리스트추가
 	 */
-	public boolean createMember(Map<String, String> memberInfo) {// 중복체크는 별도의
-		// 메서드
+	public boolean createMember(Map<String, String> memberInfo) {						// 중복체크는 별도의 메서드
 		for (int i = 0; i < mbList.size(); i++) {
 			if (mbList.get(i).getMbUserId().equals(memberInfo.get("userId"))) {
 				return false;
@@ -177,37 +192,34 @@ public class Database {
 		} // 가입된 회원중 ID가 중복되는 값이 없을 경우
 		MemberVO newVO = new MemberVO();
 
-		newVO.setId(mbIndex++);
-		; // 인덱스
-		newVO.setMbUserId(memberInfo.get("userId")); // 아이디
-		newVO.setMbUserPw(memberInfo.get("userPw"));
-		; // 비밀번호
-		newVO.setMbUserName(memberInfo.get("userName")); // 이름
+		newVO.setId(mbIndex++);															// 인덱스
+		newVO.setMbUserId(memberInfo.get("userId")); 									// 아이디
+		newVO.setMbUserPw(memberInfo.get("userPw"));									// 비밀번호
+		newVO.setMbUserName(memberInfo.get("userName")); 								// 이름
 		return mbList.add(newVO);
 	}
 
 	/**
-	 * 회원DB-ID중복체크 생성된 회원객체를 DB에서 찾아, 중복된 ID가 없을시 생성수행
-	 * 
-	 * @param 입력
-	 *            회원ID
-	 * @return 결과
+	 * 가입시ID중복체크
+	 *	생성된 회원객체를 DB에서 찾아, 중복된 ID가 없을시 생성수행
+	 * @param 입력ID
+	 * @return boolean 중복되는 아이디가 없는지 체크
 	 */
 	public boolean idCheck(String userId) {
 		for (int i = 0; i < mbList.size(); i++) {
-			if (mbList.get(i).getMbUserId().equals(userId)) { // 회원 중복 체크
-				return false; // 중복이면 가입을 중지
+			if (mbList.get(i).getMbUserId().equals(userId)) {							// 회원 중복 체크
+				return false;															// 중복이면 가입을 중지
 			}
 		}
 		return true;
 	}
 
 	/**
-	 * 회원DB-회원삭제 회원인덱스을 DB에서 찾아 삭제수행
-	 * 
-	 * @param 회원
-	 *            인덱스
-	 * @return 삭제결과
+	 * 회원DB-회원삭제
+	 *	DB에서 입력한 index에 해당하는 회원을 찾아 삭제수행
+	 *
+	 * @param 인덱스값
+	 * @return boolean 삭제결과
 	 */
 	public boolean deleteMember(int mem_id) {
 		for (int i = 0; i < mbList.size(); i++) {
@@ -219,13 +231,50 @@ public class Database {
 
 		return false;
 	}
+	
+	/**
+	 * 로그인
+	 *	아이디와 패스워드를 입력박아 회원DB에서 해당 회원정보 반환
+	 * 
+	 * @param 입력받은 회원 인덱스
+	 * @return Map 로그인정보
+	 */
+	public Map<String, String> readIdPwFromDB(Map<String, String> input) {
+		Map<String, String> readData = new HashMap<String, String>();
+		for (int i = 0; i < mbList.size(); i++) {
+			if (mbList.get(i).getMbUserId().equals(input.get("userId"))) {
+				readData.put("id", String.valueOf(mbList.get(i).getId()));
+				readData.put("userId", mbList.get(i).getMbUserId());
+				readData.put("userPw", mbList.get(i).getMbUserPw());
+				readData.put("isAdmin", String.valueOf(mbList.get(i).isAdmin()));
+			}
+		}
+		return readData;
+	}
 
 	/**
-	 * 버스DB-노선추가 생성된 버스객체를 DB에 저장된 객체와 비교하여, '노선과 종류 모두' 중복되는 항목이 없을시 생성수행
+	 * 회원DB-잔액 충전
+	 *	로그인중인 회원의 인덱스를 매개변수로 받아 회원DB에 잔액 수정
 	 * 
-	 * @param 버스에
-	 *            대한 입력내용을 담고있는 Map
-	 * @return 결과,리스트추가
+	 * @param 로그인중인 회원 인덱스
+	 * @return int 충전후 잔액
+	 */
+	public int chargeMoney(int id, int addMoney) {
+		for (int i = 0; i < mbList.size(); i++) {
+			if (mbList.get(i).getId() == id) {
+				mbList.get(i).setMbUserMoney(addMoney);
+				return mbList.get(i).getMbUserMoney();
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * 버스DB-노선추가 
+	 *	생성된 버스객체를 DB에 저장된 객체와 비교하여, '노선과 종류 모두' 중복되는 항목이 없을시 생성수행
+	 * 
+	 * @param 버스에 대한 입력내용을 담고있는 Map
+	 * @return boolean 추가결과
 	 */
 	public boolean createBus(Map<String, String> busInfo) {
 		for (int i = 0; i < bsList.size(); i++) {
@@ -256,10 +305,11 @@ public class Database {
 	}
 
 	/**
-	 * 버스DB-노선삭제 회원인덱스을 DB에 저장된 객체와 비교하여 삭제수행
+	 * 버스DB-노선삭제
+	 *	DB에서 '입력한 index'에 해당하는 버스을 찾아 삭제수행
 	 * 
-	 * @param 회원인덱스
-	 * @return 삭제결과
+	 * @param 인덱스값
+	 * @return boolean 삭제결과
 	 */
 	public boolean deleteBus(int bus_id) {
 		for (int i = 0; i < bsList.size(); i++) {
@@ -272,28 +322,16 @@ public class Database {
 		return false;
 	}
 
-	/**
-	 * 총 매출
-	 * @return 판매량 총합
-	 */
-	public int allPayMoney() {
-		int sum = 0;
-		for (int i = 0; i < tkList.size(); i++) {
-			sum += Integer.parseInt(bsList.get(tkList.get(i).getBusId()).getBsPrice());
-		}
-		return sum;
-	}
-
 
 	/**
 	 * 티켓DB-티켓목록 회원메뉴
-	 * 전체 티켓목록 중에서 해당 회원이 구입한 리스트를 추려내 반환
+	 *	전체 티켓목록 중에서 해당 회원이 구입한 리스트를 추려내 반환
 	 * @param 구매회원 인덱스
-	 * @return 투스트링
+	 * @return toString
 	 */
-	public String getTkListString(int index) {
+	public String getTicketListString(int index) {
 		// "번호\t노선\t출발시간\t구매시간\t버스등급\t좌석"'
-		String toString = "┃\t"+tkList.get(index).getId() + "\t" +							// 번호
+		String toString = "┃\t"+tkList.get(index).getId() + "\t" +						// 번호
 				bsList.get(tkList.get(index).getBusId()).getBsRoute() + "\t" +			// 노선
 				bsList.get(tkList.get(index).getBusId()).getBsDepartureTime() + "\t" +	// 출발시간
 				tkList.get(index).getTkBuyTime() + "\t" + 								// 구매시간
@@ -304,29 +342,30 @@ public class Database {
 	}
 
 	/**
-	 * 티켓DB-구매된 티켓추가 생성된 티켓객체를 DB에 저장된 객체와 비교하여, '노선과 종류, 좌석' 중복되는 항목이 없을시 생성수행
+	 * 티켓DB-구매된 티켓추가
+	 *	생성된 티켓객체를 DB에 저장된 객체와 비교하여, '노선과 종류, 좌석' 중복되는 항목이 없을시 생성수행
 	 * 
 	 * @param 버스VO
-	 * @return value 구입후잔액, -1 해당 노선이 존재하지 않습니다, -2 좌석이 이미 판매되었습니다, -3	 잔액이 부족합니다.
+	 * @return int 구입후잔액, -1 해당 노선이 존재하지 않습니다, -2 좌석이 이미 판매되었습니다, -3	 잔액이 부족합니다.
 	 */
 	public int createTicket(Map<String, String> ticketInfo) {
 
 		for (int j = 0; j < bsList.size(); j++) {
-			if (String.valueOf(bsList.get(j).getId()).equals(ticketInfo.get("bsRoute"))) { // 해당 노선이 있을때
+			if (String.valueOf(bsList.get(j).getId()).equals(ticketInfo.get("bsRoute"))) {			// 해당 노선이 있을때
 				// 팔린좌석인지 체크하는 반복문
 				for (int i = 0; i < tkList.size(); i++) {
-					if (tkList.get(i).getBusId() == bsList.get(j).getId() && // 티켓의 외래키(버스id)로 버스정보 얻어오기-
-							tkList.get(i).getSeat() == Integer.parseInt(ticketInfo.get("seat"))) { // 팔린좌석인가?
+					if (tkList.get(i).getBusId() == bsList.get(j).getId() && 						// 티켓의 외래키(버스id)로 버스정보 얻어오기-
+							tkList.get(i).getSeat() == Integer.parseInt(ticketInfo.get("seat"))) {	// 팔린좌석인가?
 						return -2;	//좌석이 이미 판매되었습니다.
 					}
 				}// 안팔렸다!
 				TicketVO newVO = new TicketVO();
 
-				newVO.setId(bsIndex++);											// 티켓인덱스
-				newVO.setMemId(Integer.parseInt(ticketInfo.get("session")));	// 구매자를 외래키를 이용하여 호출
-				newVO.setBusId(bsList.get(j).getId());							// 버스정보를 외래키를 이용하여 호출
-				newVO.setTkBuyTime(df.format(new Date()));						// 구매시간
-				tkList.add(newVO);												// 티켓목록에 새로운 티켓추가
+				newVO.setId(bsIndex++);												// 티켓인덱스
+				newVO.setMemId(Integer.parseInt(ticketInfo.get("session")));		// 구매자를 외래키를 이용하여 호출
+				newVO.setBusId(bsList.get(j).getId());								// 버스정보를 외래키를 이용하여 호출
+				newVO.setTkBuyTime(df.format(new Date()));							// 구매시간
+				tkList.add(newVO);													// 티켓목록에 새로운 티켓추가
 				for (int i = 0; i < mbList.size(); i++) {
 					if (mbList.get(i).getId() == Integer.parseInt(ticketInfo.get("session"))) {
 						if(mbList.get(i).getMbUserMoney() >= Integer.parseInt(bsList.get(j).getBsPrice())){	//현재 잔액이 결제금액보다 많으면
@@ -345,9 +384,8 @@ public class Database {
 	/**
 	 * 티켓DB-구매된 티켓삭제 티켓인덱스을 DB에 저장된 객체와 비교하여 해당 티켓 환불수행
 	 * 
-	 * @param 티켓
-	 *            인덱스
-	 * @return 환불후잔액, -1 해탕티켓이 존재하지않음, -2 해당티켓의 구매자가 아님
+	 * @param 티켓인덱스
+	 * @return int 환불후잔액, -1 해탕티켓이 존재하지않음, -2 해당티켓의 구매자가 아님
 	 */
 	public int deleteTicket(int loginId, int ticketId) {
 		int price = 0;
@@ -368,33 +406,15 @@ public class Database {
 	}
 
 	/**
-	 * 회원DB-잔액 충전 회원인덱스을 DB에 충전 수행
-	 * 
-	 * @param 회원
-	 *            인덱스
-	 * @return 충전후 잔액
+	 * 총 매출
+	 * @return int 판매량 총합
 	 */
-	public int chargeMoney(int id, int addMoney) {
-		for (int i = 0; i < mbList.size(); i++) {
-			if (mbList.get(i).getId() == id) {
-				mbList.get(i).setMbUserMoney(addMoney);
-				return mbList.get(i).getMbUserMoney();
-			}
+	public int allPayMoney() {
+		int sum = 0;
+		for (int i = 0; i < tkList.size(); i++) {
+			sum += Integer.parseInt(bsList.get(tkList.get(i).getBusId()).getBsPrice());
 		}
-		return -1;
-	}
-
-	public Map<String, String> readIdPwFromDB(Map<String, String> input) {
-		Map<String, String> readData = new HashMap<String, String>();
-		for (int i = 0; i < mbList.size(); i++) {
-			if (mbList.get(i).getMbUserId().equals(input.get("userId"))) {
-				readData.put("id", String.valueOf(mbList.get(i).getId()));
-				readData.put("userId", mbList.get(i).getMbUserId());
-				readData.put("userPw", mbList.get(i).getMbUserPw());
-				readData.put("isAdmin", String.valueOf(mbList.get(i).isAdmin()));
-			}
-		}
-		return readData;
+		return sum;
 	}
 
 }
