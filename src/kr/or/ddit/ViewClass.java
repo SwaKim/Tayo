@@ -217,7 +217,7 @@ public class ViewClass {
 	    clear();																//화면정리
 		System.out.println("┏━━━━버스예매━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
 		System.out.println("┃");
-		System.out.println("┃\t번호\t노선\t출발시간\t\t버스등급\t가격\t좌석");
+		System.out.println("┃\t번호\t노선\t출발시간\t\t버스등급\t가격\t남은 좌석");
 		service.showBusList();
 		
 		System.out.println("┃\t");
@@ -225,7 +225,7 @@ public class ViewClass {
 		System.out.print("노선에 해당하는 번호를 선택해 주세요.");
 		String bsRoute = sc.next();
 
-		System.out.println("┗━━━━좌석 선택");
+		System.out.println("┗━━━━좌석 선택 (일반 45, 우등35) :");
 		String seat = sc.next();
 
 		temp.put("session", String.valueOf(session));
@@ -250,9 +250,9 @@ public class ViewClass {
 	public void confirmTicket() {
 		while (true) {
 		    clear();															//화면정리
-			System.out.println("┏━━━━예매확인 및 취소 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+			System.out.println("┏━━━━구매티켓확인  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
 			System.out.println("┃");
-			System.out.println("┃\t번호\t노선\t출발시간\t\t구매시간\t\t버스등급\t좌석\t가격");
+			System.out.println("┃\t번호\t노선\t출발시간\t\t구매시간\t\t버스등급\t가격\t좌석 번호");
 			service.showTicketList(session);									//로그인한 회원의 구매목록 출력
 			System.out.println("┃");
 			System.out.println("┣━━━━메뉴");

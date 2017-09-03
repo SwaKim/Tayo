@@ -5,7 +5,7 @@ package kr.or.ddit;
  * @Class 
  * @Description 고속버스 예매 시스템
  * @author
- * @since 2017-08-29
+ * @since 2017-08-28
  * @version 0.1
  * @see
  * <pre>

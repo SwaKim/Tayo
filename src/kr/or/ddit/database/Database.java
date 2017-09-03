@@ -125,17 +125,25 @@ public class Database {
 
 	/**
 	 * 버스DB-버스목록 회원, 관리자메뉴
-	 * 
+	 * @param
 	 * @return 버스리스트
 	 */
 	public String getBusList(int index) {
+		//남은 좌석계산
+		int remainSeat = bsList.get(index).getBsSeatlist().length;
+		for (int i = 0; i < tkList.size(); i++) {
+			if (tkList.get(i).getBusId() == bsList.get(index).getId()) {
+				remainSeat-=1;
+			}
+		}
 		// "번호\t노선\t출발시간\t버스등급\t좌석"'
+		
 		String toString = "┃\t"+bsList.get(index).getId() + "\t" + 						// 번호
 				bsList.get(index).getBsRoute() + "\t" + 								// 노선
 				bsList.get(index).getBsDepartureTime() + "\t" + // 출발시간
 				bsList.get(index).getBsKind() + "\t" + 									// 버스등급
 				bsList.get(index).getBsPrice() + "\t" + 								// 가격
-				bsList.get(index).getBsSeatlist().length + "\t";						// 좌석
+				remainSeat + "\t";														// 남은좌석
 		return toString;
 	}
 /*
@@ -330,14 +338,20 @@ public class Database {
 	 * @return toString
 	 */
 	public String getTicketListString(int index) {
-		// "번호\t노선\t출발시간\t구매시간\t버스등급\t좌석"'
-		String toString = "┃\t"+tkList.get(index).getId() + "\t" +						// 번호
-				bsList.get(tkList.get(index).getBusId()).getBsRoute() + "\t" +			// 노선
-				bsList.get(tkList.get(index).getBusId()).getBsDepartureTime() + "\t" +	// 출발시간
-				tkList.get(index).getTkBuyTime() + "\t" + 								// 구매시간
-				bsList.get(tkList.get(index).getBusId()).getBsKind() + "\t" +			// 버스등급
-				bsList.get(tkList.get(index).getBusId()).getBsPrice() + "\t" +			// 가격
-				tkList.get(index).getSeat() + "\t"; // 좌석
+		String toString = "";
+		//남은 좌석계산
+		for (int i = 0; i < tkList.size(); i++) {
+			if (tkList.get(i).getMemId() == index) {
+				// "번호\t노선\t출발시간\t구매시간\t버스등급\t좌석"
+				toString = "┃\t"+tkList.get(i).getId() + "\t" +						// 번호
+						bsList.get(tkList.get(i).getBusId()).getBsRoute() + "\t" +			// 노선
+						bsList.get(tkList.get(i).getBusId()).getBsDepartureTime() + "\t" +	// 출발시간
+						tkList.get(i).getTkBuyTime() + "\t" + 								// 구매시간
+						bsList.get(tkList.get(i).getBusId()).getBsKind() + "\t" +			// 버스등급
+						bsList.get(tkList.get(i).getBusId()).getBsPrice() + "\t" +			// 가격
+						tkList.get(i).getSeat() + "\t"; // 좌석
+			}
+		}
 		return toString;
 	}
 
@@ -362,9 +376,10 @@ public class Database {
 				TicketVO newVO = new TicketVO();
 
 				newVO.setId(bsIndex++);												// 티켓인덱스
-				newVO.setMemId(Integer.parseInt(ticketInfo.get("session")));		// 구매자를 외래키를 이용하여 호출
-				newVO.setBusId(bsList.get(j).getId());								// 버스정보를 외래키를 이용하여 호출
+				newVO.setMemId(Integer.parseInt(ticketInfo.get("session")));		// 구매자		를 외래키를 이용하여 호출
+				newVO.setBusId(bsList.get(j).getId());								// 버스정보	를 외래키를 이용하여 호출
 				newVO.setTkBuyTime(df.format(new Date()));							// 구매시간
+				newVO.setSeat(Integer.parseInt(ticketInfo.get("seat")));;			// 좌석
 				tkList.add(newVO);													// 티켓목록에 새로운 티켓추가
 				for (int i = 0; i < mbList.size(); i++) {
 					if (mbList.get(i).getId() == Integer.parseInt(ticketInfo.get("session"))) {
