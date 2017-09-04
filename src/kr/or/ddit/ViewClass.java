@@ -194,7 +194,7 @@ public class ViewClass {
 				ticketing();													// 버스예매
 				break;
 			case "2":
-				confirmTicket();													// 구매 티켓 확인
+				confirmTicket();												// 구매 티켓 확인
 				break;
 			case "3":
 				chargeMoney();													// 충전
@@ -217,8 +217,12 @@ public class ViewClass {
 		System.out.println("┏━━━━버스예매━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
 		System.out.println("┃");
 		System.out.println("┃\t번호\t노선\t출발시간\t\t버스등급\t가격\t남은 좌석");
-		service.showBusList();
-		
+		boolean t =  service.showBusList();
+        if(t == false){
+            System.out.println("┃");
+            System.out.print("┗━━━━━━━━운행중인 버스가 없습니다.");
+            return;
+         }
 		System.out.println("┃\t");
 		System.out.println("┣━━━━목적지 선택");
 		System.out.print("노선에 해당하는 번호를 선택해 주세요.");
@@ -246,53 +250,64 @@ public class ViewClass {
 	}
 
 	// 구매티켓확인
-	public void confirmTicket() {
-		while (true) {
-		    clear();															//화면정리
-			System.out.println("┏━━━━구매티켓확인  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
-			System.out.println("┃");
-			System.out.println("┃\t번호\t노선\t출발시간\t\t구매시간\t\t버스등급\t가격\t좌석 번호");
-			service.showTicketList(session);									//로그인한 회원의 구매목록 출력
-			System.out.println("┃");
-			System.out.println("┣━━━━메뉴");
-			System.out.println("┃\t");
-			System.out.println("┃\t1 : 티켓 취소하기");
-			System.out.println("┃\t2 : 뒤로가기");
-			System.out.println("┃\t");
-			System.out.print("┗━━━━━━━━원하는 메뉴를 입력하세요 : ");
-			String input = sc.next();
+	   public void confirmTicket() {
+	      while (true) {
+	          clear();                                             //화면정리
+	         System.out.println("┏━━━━구매티켓확인  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+	         System.out.println("┃");
+	         System.out.println("┃\t번호\t노선\t출발시간\t\t구매시간\t\t버스등급\t가격\t좌석 번호");
+	         boolean tl = service.showTicketList(session);                           //로그인한 회원의 구매목록 출력
+	         if(tl == false){
+	            System.out.println("┃");
+	            System.out.print("┗━━━━━━━━예약하신 티켓이 없습니다.");
+	            return;
+	         }
+	         System.out.println("┃");
+	         System.out.println("┣━━━━메뉴");
+	         System.out.println("┃\t");
+	         System.out.println("┃\t1 : 티켓 취소하기");
+	         System.out.println("┃\t2 : 뒤로가기");
+	         System.out.println("┃\t");
+	         System.out.print("┗━━━━━━━━원하는 메뉴를 입력하세요 : ");
+	         String input = sc.next();
+	            
+	         switch (input) {
+	         case "1":
+	            
+	            System.out.print("취소할 티켓의 번호를 입력해주세요 : ");
+	            int tiket = sc.nextInt();
+	            int result = service.refundTicket(session, tiket);
+	            if (result == -1) {
+	               System.out.println("해당티켓이 없습니다.");
+	            } else if (result == -2) {
+	               System.out.println("해당티켓의 구매자가 아닙니다.");
+	            } else {
+	               System.out.println("티켓이 환불되었습니다.");
 
-			switch (input) {
-			case "1":
-				System.out.print("취소할 티켓의 번호를 입력해주세요 : ");
-				int tiket = sc.nextInt();
-				int result = service.refundTicket(session, tiket);
-				if (result == -1) {
-					System.out.println("해당티켓이 없습니다.");
-				} else if (result == -2) {
-					System.out.println("해당티켓의 구매자가 아닙니다.");
-				} else {
-					System.out.println("티켓이 환불되었습니다.");
-
-					System.out.println("고객님께서 현재 보유하신 금액은 "+result+"원 입니다.");
-				}
-				break;
-			case "2":
-				return;
-			default:
-				System.out.println("잘못된 입력입니다.");
-				continue;
-			}
-		}
-	}
+	               System.out.println("고객님께서 현재 보유하신 금액은 "+result+"원 입니다.");
+	            }
+	            
+	            break;
+	         case "2":
+	            return;
+	         default:
+	            System.out.println("잘못된 입력입니다.");
+	            continue;
+	         }
+	      }
+	   }
 
 	// 포인트충전
 	public void chargeMoney() {
-	    clear();																//화면정리
+		clear();                                                				//화면정리
+		int money = 0;
+		int currentMoney = service.chargeMoney(session, money);   
 		System.out.println("┏━━━━포인트 충전━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
 		System.out.println("┃");
+		System.out.println("┃\t고객님께서 현재 보유하신 금액은 "+currentMoney+"원 입니다.");
+		System.out.println("┃");
 		System.out.print("┗━━━━선불 결제할 금액을 입력해 주세요 : ");
-		int money = 0;
+
 		while (money<=0) {														//양수만 입력 가능. 인출불가
 			try {
 				money = sc.nextInt();
@@ -303,7 +318,7 @@ public class ViewClass {
 				System.out.println("다시 입력해주세요. 인출은 고객센터로 문의바랍니다.");
 			}
 		}
-		int currentMoney = service.chargeMoney(session, money);					//현재 잔액
+		currentMoney = service.chargeMoney(session, money);						//현재 잔액
 		System.out.println("고객님께서 현재 보유하신 금액은 "+currentMoney+"원 입니다.");
 
 	}
@@ -350,7 +365,12 @@ public class ViewClass {
 			System.out.println("┏━━━━회원관리━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
 			System.out.println("┃");
 			System.out.println("┃\t번호\tID\t이름\t잔고\t관리자");
-			service.showMemberList();
+			boolean t = service.showMemberList();
+	         if(t == false){
+	            System.out.println("┃");
+	            System.out.print("┗━━━━━━━━회원이 없습니다.");
+	            return;
+	         }
 			System.out.println("┃");
 			System.out.println("┣━━━━메뉴");
 			System.out.println("┃\t");
@@ -497,10 +517,15 @@ public class ViewClass {
 		System.out.println("┏━━━━ 정산   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
 		System.out.println("┃");
 		System.out.println("┃\t번호\t노선\t출발시간\t\t구매시간\t\t버스등급\t좌석\t가격\t구매자");
-		service.showTotalTicketList();											//모든 티켓 열람
+		boolean t = service.showTotalTicketList();								//모든 티켓 열람
+        if(t == false){
+           System.out.println("┃");
+           System.out.print("┗━━━━━━━━판매된 티켓이 없습니다.");
+           return;
+        }
 		int sum = service.calcTotal();											//티켓 총 판매금액
 		System.out.println("┃");
-		System.out.println("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\t합계\t"+service.calcTotal()+"원");
+		System.out.println("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\t합계\t"+sum+"원");
 	}
 	
 	/**

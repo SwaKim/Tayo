@@ -381,10 +381,10 @@ public class Database {
 				newVO.setBusId(bsList.get(j).getId());								// 버스정보	를 외래키를 이용하여 호출
 				newVO.setTkBuyTime(df.format(new Date()));							// 구매시간
 				newVO.setSeat(Integer.parseInt(ticketInfo.get("seat")));;			// 좌석
-				tkList.add(newVO);													// 티켓목록에 새로운 티켓추가
 				for (int i = 0; i < mbList.size(); i++) {
 					if (mbList.get(i).getId() == Integer.parseInt(ticketInfo.get("session"))) {
 						if(mbList.get(i).getMbUserMoney() >= Integer.parseInt(bsList.get(j).getBsPrice())){	//현재 잔액이 결제금액보다 많으면
+							tkList.add(newVO);																// 티켓목록에 새로운 티켓추가
 							mbList.get(i).setMbUserMoney(-Integer.parseInt(bsList.get(j).getBsPrice()));	//결제가능
 							return mbList.get(i).getMbUserMoney();											//결제후 남은 금액 반환
 						}

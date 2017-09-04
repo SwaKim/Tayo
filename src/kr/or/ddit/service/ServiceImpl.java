@@ -157,14 +157,19 @@ public class ServiceImpl implements Service {
 
 	// 회원메뉴티켓리스트
 	@Override
-	public boolean showTicketList(int loginid) {
-		for (int i = 0; i < db.getTotalTicketList().size(); i++) {
-			if (db.getTicketListString(loginid).get(i)!=null) {
-				System.out.println(db.getTicketListString(loginid).get(i));
-			}
-		}
-		return true;
-	}
+	   public boolean showTicketList(int loginid) {
+	      if(db.getTicketListSize(loginid) == 0){								//구매한티켓이 한개도 없을때
+	         return false;
+	      }
+	      for (int i = 0; i < db.getTotalTicketList().size(); i++) {			//구매한 티켓이 있을때.
+	         if (db.getTicketListString(loginid).get(i) != null) {
+	            System.out.println(db.getTicketListString(loginid).get(i));
+	         }
+
+	      }
+	      
+	      return true;
+	   }
 
 	// 관리자용티켓리스트
 	@Override
