@@ -32,6 +32,7 @@ import kr.or.ddit.service.ServiceImpl;
 public class ViewClass {
 	Pattern p = Pattern.compile("^[0-9a-z-A-Z]+$");								// 아이디 비번 확인용
 	Pattern p2 = Pattern.compile("^[가-힣a-zA-Z]+$");								// 이름 확인용 정규식
+	Pattern p3 = Pattern.compile("^[0-9]+$");									// 이름 확인용 정규식
 
 	private Service service = new ServiceImpl();
 	Scanner sc = new Scanner(System.in);
@@ -176,38 +177,49 @@ public class ViewClass {
 	}
 
 	// 회원메뉴
-	public void memberMenu() {
-		while (true) {
-		    clear();															//화면정리
-			System.out.println("┏━━━━회원메뉴━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
-			System.out.println("┃");
-			System.out.println("┃\t1 : 버스 예매하기");
-			System.out.println("┃\t2 : 구매 티켓 확인");
-			System.out.println("┃\t3 : 포인트 충전");
-			System.out.println("┃\t4 : 로그아웃");
-			System.out.println("┃\t");
-			System.out.print("┗━━━━━━━━원하는 메뉴를 입력하세요 : ");
-			String input = sc.next();
+	   public void memberMenu() {
+	      while (true) {
+	          clear();                                             //화면정리
+	         System.out.println("┏━━━━회원메뉴━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+	         System.out.println("┃");
+	         System.out.println("┃\t1 : 버스 예매하기");
+	         System.out.println("┃\t2 : 구매 티켓 확인");
+	         System.out.println("┃\t3 : 포인트 충전");
+	         System.out.println("┃\t4 : 회원탈퇴");
+	         System.out.println("┃\t5 : 로그아웃");
+	         System.out.println("┃\t");
+	         System.out.print("┗━━━━━━━━원하는 메뉴를 입력하세요 : ");
+	         String input = sc.next();
 
-			switch (input) {
-			case "1":
-				ticketing();													// 버스예매
-				break;
-			case "2":
-				confirmTicket();												// 구매 티켓 확인
-				break;
-			case "3":
-				chargeMoney();													// 충전
-				break;
-			case "4":
-				return;
+	         switch (input) {
+	         case "1":
+	            ticketing();                                       // 버스예매
+	            break;
+	         case "2":
+	            confirmTicket();                                    // 구매 티켓 확인
+	            break;
+	         case "3":
+	            chargeMoney();                                       // 충전
+	            break;
+	         case "4"://회원탈퇴
+	            boolean t = service.deleteMember(session);
+	            if(t){
+	               System.out.println("탈퇴되었습니다.");
+	               return;
+	            }else{
+	               System.out.println("탈퇴실패되었습니다.");
+	            }
+	            
+	            return;   
+	         case "5":
+	            return;
 
-			default:
-				System.out.println("잘못된 입력입니다.");
-				continue;
-			}
-		}
-	}
+	         default:
+	            System.out.println("잘못된 입력입니다.");
+	            continue;
+	         }
+	      }
+	   }
 
 	// 버스예매하기
 	public void ticketing() {
@@ -225,10 +237,10 @@ public class ViewClass {
          }
 		System.out.println("┃\t");
 		System.out.println("┣━━━━목적지 선택");
-		System.out.print("노선에 해당하는 번호를 선택해 주세요.");
+		System.out.print("┃\t노선에 해당하는 번호를 선택해 주세요.");
 		String bsRoute = sc.next();
 
-		System.out.println("┗━━━━좌석 선택 (일반 45, 우등35) :");
+		System.out.println("┗━━━━좌석 선택 (일반버스 45번까지, 우등버스 35번까지) :");
 		String seat = sc.next();
 
 		temp.put("session", String.valueOf(session));
@@ -298,30 +310,34 @@ public class ViewClass {
 	   }
 
 	// 포인트충전
-	public void chargeMoney() {
-		clear();                                                				//화면정리
-		int money = 0;
-		int currentMoney = service.chargeMoney(session, money);   
-		System.out.println("┏━━━━포인트 충전━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
-		System.out.println("┃");
-		System.out.println("┃\t고객님께서 현재 보유하신 금액은 "+currentMoney+"원 입니다.");
-		System.out.println("┃");
-		System.out.print("┗━━━━선불 결제할 금액을 입력해 주세요 : ");
+	   public void chargeMoney() {
+	      clear();																//화면정리
+	      String inputMoney = "0";
+	      int currentMoney = service.chargeMoney(session, Integer.parseInt(inputMoney));   
+	      System.out.println("┏━━━━포인트 충전━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+	      System.out.println("┃");
+	      System.out.println("┃\t고객님께서 현재 보유하신 금액은 "+currentMoney+"원 입니다.");
+	      System.out.println("┃");
+	      System.out.print("┗━━━━선불 결제할 금액을 입력해 주세요 : ");
+	      try {
+	         while (Integer.parseInt(inputMoney)<=0) {							//양수만 입력 가능. 인출불가
 
-		while (money<=0) {														//양수만 입력 가능. 인출불가
-			try {
-				money = sc.nextInt();
-			} catch (Exception e) {
-				System.out.println("너무 과분한 돈입니다.");
-			}
-			if (money<=0) {
-				System.out.println("다시 입력해주세요. 인출은 고객센터로 문의바랍니다.");
-			}
-		}
-		currentMoney = service.chargeMoney(session, money);						//현재 잔액
-		System.out.println("고객님께서 현재 보유하신 금액은 "+currentMoney+"원 입니다.");
+	            inputMoney = sc.next();
+	            Matcher m3 = p3.matcher(inputMoney);
+	            if(!m3.find()){
+	               System.out.println("입력값이 올바르지 않습니다.");
+	               return;
+	            }
+	         }
+	         currentMoney = service.chargeMoney(session, Integer.parseInt(inputMoney));		//현재 잔액
+	      } catch (Exception e) {
+	         System.out.println("충전가능한범위를 넘었습니다.");
+	      }
 
-	}
+	         System.out.println("고객님께서 현재 보유하신 금액은 "+currentMoney+"원 입니다.");
+
+
+	   }
 
 	// 관리자메뉴
 	public void adminMenu() {
