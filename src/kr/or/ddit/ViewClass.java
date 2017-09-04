@@ -384,12 +384,17 @@ public class ViewClass {
 			case "1":
 				System.out.print("삭제할 회원의 번호를 입력하세요 : ");
 				int delUserIndex = 0;
-
+				
 				try {
 					delUserIndex = sc.nextInt();
+					if (delUserIndex==0) {
+						System.out.println("메인 관리자는 삭제할 수 없습니다.");
+						continue;
+					}
 				} catch (Exception e) {
 					System.out.println("숫자만 입력해 주세요.");
 				}
+				
 				boolean UserCheck = service.deleteMember(delUserIndex);
 
 				if (UserCheck) {

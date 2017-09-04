@@ -45,7 +45,7 @@ public class Database {
 
 	//테스트용 선기입 데이터, 실제 운용시 삭제
 	public Database() {
-		BusVO bs = new BusVO(bsIndex++, "대전-서울", "9000", df.format(new Date().getTime() + ( (long)1000*60*60 * 0 )), new int[45], "우등");
+	/*	BusVO bs = new BusVO(bsIndex++, "대전-서울", "9000", df.format(new Date().getTime() + ( (long)1000*60*60 * 0 )), new int[45], "우등");
 		bsList.add(bs);
 		BusVO bs1 = new BusVO(bsIndex++, "대전-서울", "5000", df.format(new Date().getTime() + ( (long)1000*60*60 * 1 )), new int[35], "일반");
 		bsList.add(bs1);
@@ -56,12 +56,12 @@ public class Database {
 		BusVO bs4 = new BusVO(bsIndex++, "나주-서울", "9000", df.format(new Date().getTime() + ( (long)1000*60*60 * 4 )), new int[45], "우등");
 		bsList.add(bs4);
 		BusVO bs5 = new BusVO(bsIndex++, "서울-나주", "5000", df.format(new Date().getTime() + ( (long)1000*60*60 * 5 )), new int[35], "일반");
-		bsList.add(bs5);
+		bsList.add(bs5);*/
 
 		MemberVO mb = new MemberVO(mbIndex++, true, "admin", "admin", "관리자", 100000);
 		mbList.add(mb);
 		
-		//관리자가 구매한 티켓
+	/*	//관리자가 구매한 티켓
 		TicketVO tk = new TicketVO(tkIndex++, df.format(new Date().getTime()), true, 0, 1, 21);
 		tkList.add(tk);
 		TicketVO tk2 = new TicketVO(tkIndex++, df.format(new Date().getTime() - ( (long)1000*60*60 * 1 )), true, 0, 2, 20);
@@ -75,7 +75,7 @@ public class Database {
 		TicketVO tk5 = new TicketVO(tkIndex++, df.format(new Date().getTime() - ( (long)1000*60*60 * 4 )), true, 1, 4, 32);
 		tkList.add(tk5);
 		TicketVO tk6 = new TicketVO(tkIndex++, df.format(new Date().getTime() - ( (long)1000*60*60 * 5 )), true, 1, 2, 27);
-		tkList.add(tk6);
+		tkList.add(tk6);*/
 	}
 
 	/**
