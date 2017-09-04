@@ -28,6 +28,7 @@ import kr.or.ddit.vo.TicketVO;
  *   2017.09.01			김수환		로그인 구간 체크
  *   2017.09.02			김수환		관리자메뉴
  *   2017.09.03			김수환		세부메뉴 기능 구현
+ *   2017.09.04			김수환		오류수정	
  * Copyright (c) 2017 by DDIT  All right reserved
  *</pre>
  */
@@ -408,17 +409,17 @@ public class Database {
 		for (int j = 0; j < mbList.size(); j++) {
 			if (tkList.get(ticketId).getMemId() == loginId) {				//구매회원인지 확인
 				for (int i = 0; i < tkList.size(); i++) {
-					if (tkList.get(i).getId() == ticketId) {					//해당티켓을
-						tkList.remove(i);
+					if (tkList.get(i).getId() == ticketId) {				//해당티켓을
 						price = Integer.parseInt(bsList.get(tkList.get(ticketId).getBusId()).getBsPrice());
-						mbList.get(j).setMbUserMoney(price);
-						return mbList.get(j).getMbUserMoney();
+						mbList.get(loginId).setMbUserMoney(price);			//해당 티켓만큼 금액충전
+						tkList.remove(i);									//환불이 끝났으니 티켓삭제
+						return mbList.get(loginId).getMbUserMoney();
 					}
 				}
 				return -1; 													// 해당 티켓이 없어서 환불불가
 			}
 		}
-		return -2;																// 구매자가 아니라서 환불 불가
+		return -2;															// 구매자가 아니라서 환불 불가
 	}
 
 	/**
